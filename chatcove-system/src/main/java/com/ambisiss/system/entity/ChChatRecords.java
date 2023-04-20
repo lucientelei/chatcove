@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author chenxiaoye
@@ -46,6 +47,5 @@ public class ChChatRecords implements Serializable {
     private LocalDateTime updateTime;
 
     private Long messageTypeId;
-
 
 }

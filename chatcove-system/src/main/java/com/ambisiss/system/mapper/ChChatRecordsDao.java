@@ -1,4 +1,4 @@
-package com.ambisiss.system.dao;
+package com.ambisiss.system.mapper;
 
 import com.ambisiss.system.entity.ChChatRecords;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

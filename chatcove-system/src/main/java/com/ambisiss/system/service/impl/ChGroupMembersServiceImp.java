@@ -1,7 +1,7 @@
 package com.ambisiss.system.service.impl;
 
 import com.ambisiss.system.entity.ChGroupMembers;
-import com.ambisiss.system.dao.ChGroupMembersDao;
+import com.ambisiss.system.mapper.ChGroupMembersDao;
 import com.ambisiss.system.service.ChGroupMembersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

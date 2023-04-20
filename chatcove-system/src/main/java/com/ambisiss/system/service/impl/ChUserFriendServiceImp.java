@@ -1,7 +1,7 @@
 package com.ambisiss.system.service.impl;
 
 import com.ambisiss.system.entity.ChUserFriend;
-import com.ambisiss.system.dao.ChUserFriendDao;
+import com.ambisiss.system.mapper.ChUserFriendDao;
 import com.ambisiss.system.service.ChUserFriendService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

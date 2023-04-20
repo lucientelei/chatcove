@@ -1,7 +1,7 @@
 package com.ambisiss.system.service.impl;
 
 import com.ambisiss.system.entity.ChFriendRelatetionship;
-import com.ambisiss.system.dao.ChFriendRelatetionshipDao;
+import com.ambisiss.system.mapper.ChFriendRelatetionshipDao;
 import com.ambisiss.system.service.ChFriendRelatetionshipService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

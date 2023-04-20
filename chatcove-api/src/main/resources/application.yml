@@ -2,8 +2,6 @@ server:
   port: 9870
 
 spring:
-  jpa:
-    open-in-view: false
   application:
     name: ChatCove
   datasource:
@@ -30,3 +28,16 @@ mybatis:
   typeAliasesPackage: com.ambisiss.**.entity
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mapper/system/*Mapper.xml
+
+# PageHelper分页插件
+pagehelper:
+  #分页插件会自动检测当前的数据库链接，自动选择合适的分页方式。
+  helperDialect: mysql
+  #分页合理化参数，默认值为 false 。当该参数设置为 true 时， pageNum<=0 时会查询第一页， pageNum>pages （超过总数时），会查询最后一页。
+  reasonable: true
+  #支持通过Mapper接口参数传递page参数,默认值为falset
+  supportMethodsArguments: true
+  #默认值为 false ，当该参数设置为 true 时，如果 pageSize=0 或者 RowBounds.limit =0 就会查询出全部的结果（相当于没有执行分页查询，但是返回结果仍然是 Page 类型）
+  params: count=countSql
+  #默认值为 false ，当该参数设置为 true 时，如果 pageSize=0 或者 RowBounds.limit =0 就会查询出全部的结果（相当于没有执行分页查询，但是返回结果仍然是 Page 类型）
+  pageSizeZero: true
