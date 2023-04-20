@@ -1,0 +1,32 @@
+server:
+  port: 9870
+
+spring:
+  jpa:
+    open-in-view: false
+  application:
+    name: ChatCove
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/chatcove?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: root
+    hikari:
+      max-lifetime: 30000
+      idle-timeout: 1000
+      tomcat:
+        max-wait: 1000
+        max-idle: 10
+        max-active: 1000
+  devtools:
+    restart:
+      enabled: true
+      poll-interval: 5s
+      quiet-period: 3s
+
+# MyBatis配置
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.ambisiss.**.entity
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/system/*Mapper.xml
