@@ -67,8 +67,9 @@ public class CodeGenerator {
 
     public static void main(String[] args) {
         // 要构建代码的表名
-        String[] tableNames = {"ch_chat_records", "ch_friend_relatetionship", "ch_group_members", "ch_group_message",
-                "ch_groups", "ch_message_status", "ch_message_type", "ch_relation_status", "ch_user", "ch_user_friend"};
+//        String[] tableNames = {"ch_chat_records", "ch_friend_relationship", "ch_group_members", "ch_group_message",
+//                "ch_groups", "ch_message_status", "ch_message_type", "ch_relation_status", "ch_user", "ch_user_friend"};
+        String[] tableNames ={"ch_friend_relationship"};
         FastAutoGenerator.create(DB_URL, USERNAME, PASSWORD)
                 // 全局配置
                 .globalConfig(builder -> builder
@@ -80,7 +81,7 @@ public class CodeGenerator {
                         .parent("")
                         .xml("mappers")
                         .entity("com.ambisiss.system.entity")
-                        .mapper("com.ambisiss.system.dao")
+                        .mapper("com.ambisiss.system.mapper")
                         .service("com.ambisiss.system.service")
                         .serviceImpl("com.ambisiss.system.service.impl")
                         .controller("com.ambisiss.api.controller")

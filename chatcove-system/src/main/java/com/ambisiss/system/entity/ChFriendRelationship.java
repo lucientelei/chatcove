@@ -16,14 +16,14 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author chenxiaoye
- * @since 2023-04-20
+ * @since 2023-04-23
  */
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName("ch_friend_relatetionship")
-@ApiModel(value = "ChFriendRelatetionship对象", description = "")
-public class ChFriendRelatetionship implements Serializable {
+@TableName("ch_friend_relationship")
+@ApiModel(value = "ChFriendRelationship对象", description = "")
+public class ChFriendRelationship implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,7 +34,11 @@ public class ChFriendRelatetionship implements Serializable {
 
     private Long friendId;
 
+    @ApiModelProperty("添加状态")
     private Long statusId;
+
+    @ApiModelProperty("是否置顶联系人 1：是 0：否")
+    private String isTop;
 
 
 }

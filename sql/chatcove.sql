@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 20/04/2023 00:24:43
+ Date: 23/04/2023 11:23:02
 */
 
 SET NAMES utf8mb4;
@@ -44,25 +44,26 @@ CREATE TABLE `ch_chat_records`  (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for ch_friend_relatetionship
+-- Table structure for ch_friend_relationship
 -- ----------------------------
-DROP TABLE IF EXISTS `ch_friend_relatetionship`;
-CREATE TABLE `ch_friend_relatetionship`  (
+DROP TABLE IF EXISTS `ch_friend_relationship`;
+CREATE TABLE `ch_friend_relationship`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` bigint UNSIGNED NOT NULL,
   `friend_id` bigint UNSIGNED NOT NULL,
-  `status_id` bigint NOT NULL,
+  `status_id` bigint NOT NULL COMMENT '添加状态',
+  `is_top` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否置顶联系人 1：是 0：否',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `friend_id`(`friend_id`) USING BTREE,
   INDEX `status_id`(`status_id`) USING BTREE,
   INDEX `idx_user_friend_status`(`user_id`, `friend_id`, `status_id`) USING BTREE,
-  CONSTRAINT `ch_friend_relatetionship_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `ch_friend_relatetionship_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `ch_friend_relatetionship_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `ch_relation_status` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `ch_friend_relationship_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `ch_friend_relationship_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `ch_friend_relationship_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `ch_relation_status` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of ch_friend_relatetionship
+-- Records of ch_friend_relationship
 -- ----------------------------
 
 -- ----------------------------
@@ -177,7 +178,7 @@ CREATE TABLE `ch_relation_status`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of ch_relation_status
