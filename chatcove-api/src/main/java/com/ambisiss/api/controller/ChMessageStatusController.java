@@ -1,11 +1,19 @@
 package com.ambisiss.api.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ambisiss.common.global.GlobalPage;
+import com.ambisiss.common.global.GlobalResult;
+import com.ambisiss.system.entity.ChMessageStatus;
+import com.ambisiss.system.service.ChMessageStatusService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author chenxiaoye
@@ -13,6 +21,40 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/chMessageStatus")
+@Api(tags = "消息状态接口")
 public class ChMessageStatusController {
+
+    @Autowired
+    private ChMessageStatusService statusService;
+
+    @PostMapping("/insert")
+    @ApiOperation(value = "新增消息状态")
+    public GlobalResult insert(@RequestBody ChMessageStatus dto) {
+        int result = statusService.insertStatus(dto);
+        return GlobalResult.success(result);
+    }
+
+    @DeleteMapping("/del/{id}")
+    @ApiOperation(value = "删除消息状态")
+    public GlobalResult del(@PathVariable("id") Long id) {
+        int result = statusService.delStatus(id);
+        return GlobalResult.success(result);
+    }
+
+    @PostMapping("/update")
+    @ApiOperation(value = "更新消息状态")
+    public GlobalResult update(@RequestBody ChMessageStatus dto) {
+        int result = statusService.updateStatus(dto);
+        return GlobalResult.success(result);
+    }
+
+    @PostMapping("/list")
+    @ApiOperation(value = "分页查询消息状态")
+    public GlobalResult list(@RequestBody ChMessageStatus dto,
+                             @RequestParam(defaultValue = "1") Integer pageNum,
+                             @RequestParam(defaultValue = "10") Integer pageSize) {
+        List<ChMessageStatus> result = statusService.listPage(dto, pageNum, pageSize);
+        return GlobalResult.success(GlobalPage.restPage(result));
+    }
 
 }

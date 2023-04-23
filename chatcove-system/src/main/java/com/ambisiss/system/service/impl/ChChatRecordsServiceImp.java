@@ -7,6 +7,7 @@ import com.ambisiss.system.mapper.ChChatRecordsDao;
 import com.ambisiss.system.service.ChChatRecordsService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class ChChatRecordsServiceImp extends ServiceImpl<ChChatRecordsDao, ChCha
 
     @Override
     public List<ChChatRecords> listRecords(ChChatRecordsPageDto dto) {
+        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         QueryWrapper<ChChatRecords> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", dto.getUserId()).eq("friend_id", dto.getFriendId())
                 .or()

@@ -38,7 +38,6 @@ public class ChFriendRelationship implements Serializable {
     private Long statusId;
 
     @ApiModelProperty("是否置顶联系人 1：是 0：否")
-    private String isTop;
-
+    private Integer isTop;
 
 }

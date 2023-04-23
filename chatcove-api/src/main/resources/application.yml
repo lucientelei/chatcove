@@ -22,8 +22,8 @@ spring:
       poll-interval: 5s
       quiet-period: 3s
 
-# MyBatis配置
-mybatis:
+# mybaits-plus配置
+mybaits-plus:
   # 搜索指定包别名
   typeAliasesPackage: com.ambisiss.**.entity
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
@@ -41,3 +41,13 @@ pagehelper:
   params: count=countSql
   #默认值为 false ，当该参数设置为 true 时，如果 pageSize=0 或者 RowBounds.limit =0 就会查询出全部的结果（相当于没有执行分页查询，但是返回结果仍然是 Page 类型）
   pageSizeZero: true
+
+jwt:
+  # header:凭证(校验的变量名)
+  header: Authorization
+  # 有效期1天(单位:s)
+  expire: 5184000
+  # secret: 秘钥(普通字符串) 不能太短，太短可能会导致报错
+  secret: T1Bm7sLdHfRy6V8gjK4a
+  # 签发者
+  issuer: ambisiss
