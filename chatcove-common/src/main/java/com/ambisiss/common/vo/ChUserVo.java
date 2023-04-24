@@ -4,8 +4,6 @@ import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 /**
  * @Author: chenxiaoye
  * @Description:
@@ -14,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ApiModel(value = "ChUserVo对象", description = "用户信息显示传输对象")
-public class ChUserVo {
+public class ChUserVo  {
 
     private Long id;
 

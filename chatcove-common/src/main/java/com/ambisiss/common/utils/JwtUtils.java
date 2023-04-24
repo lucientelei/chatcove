@@ -4,10 +4,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -15,15 +15,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author: chenxiaoye
- * @Description: jwt工具类
- * @Data: 2023-4-23 11:40:40
- */
 @Slf4j
 @Component
 @ConfigurationProperties(prefix = "jwt")
-public class JwtUtil {
+public class JwtUtils {
 
     /**
      * 秘钥
@@ -51,7 +46,7 @@ public class JwtUtil {
      * @param subject 用户ID（唯一）
      * @return
      */
-    public String createToken(String subject) {
+    public String createToken(Long subject) {
         Date now = new Date();
         // 过期时间
         Date expireDate = new Date(now.getTime() + expire * 1000);
@@ -66,12 +61,11 @@ public class JwtUtil {
 
         //生成token
         String token = Jwts.builder()
-                .setHeader(headerMap)
-                .setSubject(subject)
-                .setIssuedAt(now)
-                .setExpiration(expireDate)
-                .setIssuer(issuer)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setHeaderParam("typ", "JWT")
+                .setSubject(String.valueOf(subject))
+//                .setIssuedAt(nowDate)
+//                .setExpiration(expireDate)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
 
         log.info("JWT[" + token + "]");
@@ -98,6 +92,16 @@ public class JwtUtil {
             return null;
         }
         return claims;
+    }
+
+    /**
+     * 通过token获取用户ID
+     *
+     * @param token
+     * @return
+     */
+    public Long getUserIdFromToken(String token) {
+        return Long.valueOf(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject());
     }
 
     /**
