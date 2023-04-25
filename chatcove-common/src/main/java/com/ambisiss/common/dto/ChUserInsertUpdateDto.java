@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -17,14 +18,14 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @ApiModel(value = "ChUserUpdateDto对象", description = "用户信息更新传输对象")
-public class ChUserUpdateDto {
+public class ChUserInsertUpdateDto {
 
-    private Long id;
-
-    @Length(min = 6, max = 20, message = "用户名长度在6-20个字符之间")
+    @NotBlank(message = "用户名不能为空")
+    @Pattern(regexp = "[a-zA-Z\\u4E00-\\u9FA5]{1}[a-zA-Z0-9\\u4E00-\\u9FA5]{6,20}", message = "用户名长度在6-20个字符之间")
     private String username;
 
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).{6,20}$", message = "至少包含字母、数字，且长度6-20位")
+    @NotBlank(message = "密码不能为空")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).{6,20}$", message = "密码至少包含字母、数字，且长度6-20位")
     private String password;
 
     private String gender;

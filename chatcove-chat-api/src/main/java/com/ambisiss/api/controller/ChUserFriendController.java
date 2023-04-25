@@ -30,9 +30,6 @@ public class ChUserFriendController {
     @ApiOperation(value = "新增用户好友关系")
     public GlobalResult insertUserFriend(@RequestBody ChUserFriend dto) {
         int result = friendService.insertFriend(dto);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
         return GlobalResult.success(result);
     }
 
@@ -40,9 +37,7 @@ public class ChUserFriendController {
     @ApiOperation(value = "删除用户好友关系")
     public GlobalResult delUserFriend(@RequestBody ChUserFriend dto) {
         int result = friendService.delFriend(dto);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
+
         return GlobalResult.success(result);
     }
 

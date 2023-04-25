@@ -1,7 +1,7 @@
 package com.ambisiss.api.controller;
 
 import com.ambisiss.common.dto.ChUserDto;
-import com.ambisiss.common.dto.ChUserUpdateDto;
+import com.ambisiss.common.dto.ChUserInsertUpdateDto;
 import com.ambisiss.common.global.GlobalResult;
 import com.ambisiss.common.vo.ChUserVo;
 import com.ambisiss.system.service.ChUserService;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author chenxiaoye
@@ -21,59 +21,51 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/chat/chUser")
-@Api(tags = "用户管理接口")
+@Api(tags = "用户接口")
 public class ChUserController {
 
     @Autowired
     private ChUserService userService;
 
     @PostMapping("/register")
-    @ApiOperation(value = "新增用户")
-    public GlobalResult registerUser(@RequestBody @Validated ChUserDto dto){
+    @ApiOperation(value = "用户注册")
+    public GlobalResult registerUser(@RequestBody @Validated ChUserInsertUpdateDto dto) {
         int result = userService.insertUser(dto);
-        if (result == -1) {
-            GlobalResult.error("用户名已存在");
-        }
         return GlobalResult.success(result);
     }
 
-    @PostMapping("/update")
+    @PostMapping("/update/{id}")
     @ApiOperation(value = "修改用户信息")
-    public GlobalResult updateUserInfo(@RequestBody @Validated ChUserUpdateDto dto){
-        int result = userService.updateUser(dto);
-        if (result == 0) {
-            GlobalResult.error("更新失败");
-        }
+    public GlobalResult updateUserInfo(@PathVariable("id") Long id, @RequestBody @Validated ChUserInsertUpdateDto dto) {
+        int result = userService.updateUser(id, dto);
         return GlobalResult.success(result);
     }
 
     @DeleteMapping("/del/{id}")
     @ApiOperation(value = "删除用户")
-    public GlobalResult delUser(@PathVariable("id") Long id){
+    public GlobalResult delUser(@PathVariable("id") Long id) {
         int result = userService.delUser(id);
-        if (result == 0) {
-            GlobalResult.error("删除失败");
-        }
         return GlobalResult.success(result);
     }
 
     @GetMapping("/info/{id}")
     @ApiOperation(value = "根据ID查找用户信息")
-    public GlobalResult getUserById(@PathVariable("id") Long id){
+    public GlobalResult getUserById(@PathVariable("id") Long id) {
         ChUserVo result = userService.getUserById(id);
-        if (result == null) {
-            GlobalResult.error("不存在该用户");
-        }
         return GlobalResult.success(result);
     }
 
-    @GetMapping("/info")
-    @ApiOperation(value = "根据ID查找用户信息")
-    public GlobalResult getUserByUsername(@RequestParam String username){
+    @GetMapping("/info/name")
+    @ApiOperation(value = "根据用户名查找用户信息")
+    public GlobalResult getUserByUsername(@RequestParam String username) {
         ChUserVo result = userService.getUserByName(username);
-        if (result == null) {
-            GlobalResult.error("不存在该用户");
-        }
         return GlobalResult.success(result);
+    }
+
+    @PostMapping("/login")
+    @ApiOperation(value = "用户登录")
+    public GlobalResult userLogin(@RequestBody ChUserDto dto) {
+        String token = userService.userLogin(dto);
+        return GlobalResult.success(token);
     }
 }

@@ -35,9 +35,7 @@ public class ChChatRecordsController {
     @ApiOperation(value = "新增聊天记录")
     public GlobalResult insertRecords(@RequestBody @Validated ChChatRecordsDto dto) {
         int result = chChatRecordsService.insertRecords(dto);
-        if (result == 0) {
-            return GlobalResult.error("添加失败");
-        }
+
         return GlobalResult.success();
     }
 
@@ -45,9 +43,7 @@ public class ChChatRecordsController {
     @ApiOperation(value = "删除聊天记录")
     public GlobalResult delRecords(@RequestBody List<Long> ids) {
         int result = chChatRecordsService.delRecords(ids);
-        if (result == 0) {
-            return GlobalResult.error("删除失败");
-        }
+
         return GlobalResult.success();
     }
 

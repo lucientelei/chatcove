@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -34,17 +36,23 @@ public class SwaggerConfig implements WebMvcConfigurer {
     private String port;
 
     @Bean
-    public Docket createRestApi() {
-
-        log.info("......Swagger2启动于 localhost:" + port + "/swagger-ui.html");
+    public Docket createRestApi(Environment environment) {
+        //设置要显⽰的Swagger环境
+        Profiles profiles = Profiles.of("dev", "test");
+        //通过environment.acceptsProfiles 判断是否处在⾃⼰设定的环境当中
+        boolean flag = environment.acceptsProfiles(profiles);
+        if (flag) {
+            log.info("......Swagger2启动于 localhost:" + port + "/swagger-ui.html");
+        }
         return new Docket(DocumentationType.SWAGGER_2)
                 .pathMapping("/")
+                .enable(flag)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ambisiss.api.controller"))
                 .paths(PathSelectors.any())
                 .build()
-//                .securitySchemes(securitySchemes())
-//                .securityContexts(securityContexts())
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts())
                 .apiInfo(apiInfo());
     }
 

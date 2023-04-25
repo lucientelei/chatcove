@@ -10,7 +10,8 @@ import java.util.HashMap;
  * @Description:
  * @Data: 2023-4-20 19:15:41
  */
-public class GlobalResult extends HashMap<String, Object> {
+
+public class GlobalResult<T> extends HashMap<String, Object> {
 
     private static final Long serialVersionUID = 1L;
 
@@ -49,7 +50,7 @@ public class GlobalResult extends HashMap<String, Object> {
     public GlobalResult(int code, String msg, Object data) {
         super.put(CODE_TAG, code);
         super.put(MSG_TAG, msg);
-        if (StringUtils.isEmpty(data)) {
+        if (!StringUtils.isEmpty(data)) {
             super.put(DATA_TAG, data);
         }
     }
@@ -133,5 +134,8 @@ public class GlobalResult extends HashMap<String, Object> {
     public static GlobalResult error(int code, String msg) {
         return new GlobalResult(code, msg, null);
     }
-}
 
+    public static GlobalResult error(Object data) {
+        return new GlobalResult(HttpStatus.ERROR, "操作失败", data);
+    }
+}

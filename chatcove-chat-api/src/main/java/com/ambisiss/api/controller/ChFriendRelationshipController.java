@@ -32,9 +32,6 @@ public class ChFriendRelationshipController {
     @ApiOperation(value = "新增好友关系")
     public GlobalResult insertFriendRelationship(@RequestBody ChFriendRelationshipDto dto) {
         int result = relationshipService.insertShip(dto);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
         return GlobalResult.success(result);
     }
 
@@ -42,9 +39,6 @@ public class ChFriendRelationshipController {
     @ApiOperation(value = "删除好友关系")
     public GlobalResult delFriendRelationship(@PathVariable("id") Long id) {
         int result = relationshipService.delShip(id);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
         return GlobalResult.success(result);
     }
 
@@ -53,9 +47,6 @@ public class ChFriendRelationshipController {
     public GlobalResult updateFriendRelationshipStatus(@RequestParam Long id,
                                      @RequestParam Long statusId) {
         int result = relationshipService.updateStatus(id, statusId);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
         return GlobalResult.success(result);
     }
 
@@ -64,9 +55,6 @@ public class ChFriendRelationshipController {
     public GlobalResult updateFriendRelationshipIsTop(@RequestParam Long id,
                                     @RequestParam Integer isTop) {
         int result = relationshipService.updateIsTop(id, isTop);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
         return GlobalResult.success(result);
     }
 

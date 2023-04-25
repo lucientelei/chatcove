@@ -16,8 +16,3 @@ spring:
       enabled: true
       poll-interval: 5s
       quiet-period: 3s
-  #security配置
-  security:
-    user:
-      name: admin
-      password: admin

@@ -1,7 +1,7 @@
 package com.ambisiss.system.service;
 
 import com.ambisiss.common.dto.ChUserDto;
-import com.ambisiss.common.dto.ChUserUpdateDto;
+import com.ambisiss.common.dto.ChUserInsertUpdateDto;
 import com.ambisiss.common.vo.ChUserVo;
 import com.ambisiss.system.entity.ChUser;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -21,14 +21,14 @@ public interface ChUserService extends IService<ChUser> {
      * @param dto
      * @return
      */
-    int insertUser(ChUserDto dto);
+    int insertUser(ChUserInsertUpdateDto dto);
 
     /**
      * 更新用户信息
      * @param dto
      * @return
      */
-    int updateUser(ChUserUpdateDto dto);
+    int updateUser(Long id, ChUserInsertUpdateDto dto);
 
     /**
      * 用户注销
@@ -50,4 +50,11 @@ public interface ChUserService extends IService<ChUser> {
      * @return
      */
     ChUserVo getUserByName(String username);
+
+    /**
+     * 用户登录
+     * @param dto
+     * @return
+     */
+    String userLogin(ChUserDto dto);
 }

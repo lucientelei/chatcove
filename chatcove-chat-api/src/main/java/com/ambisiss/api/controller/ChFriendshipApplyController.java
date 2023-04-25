@@ -31,9 +31,7 @@ public class ChFriendshipApplyController {
     @ApiOperation(value = "新增申请")
     public GlobalResult insertFriendshipApply(@RequestBody ChFriendshipApplyDto dto) {
         int result = applyService.insertApply(dto);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
+
         return GlobalResult.success(result);
     }
 
@@ -41,9 +39,7 @@ public class ChFriendshipApplyController {
     @ApiOperation(value = "删除申请")
     public GlobalResult delFriendshipApply(@PathVariable("id") Long id) {
         int result = applyService.delApply(id);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
+
         return GlobalResult.success(result);
     }
 
@@ -52,9 +48,7 @@ public class ChFriendshipApplyController {
     public GlobalResult updateFriendshipApply(@PathVariable("id") Long id,
                                @RequestParam Long statusId) {
         int result = applyService.updateStatus(id, statusId);
-        if (result == 0) {
-            return GlobalResult.error();
-        }
+
         return GlobalResult.success(result);
     }
 
