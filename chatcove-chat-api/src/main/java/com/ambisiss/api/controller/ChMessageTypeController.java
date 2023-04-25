@@ -30,28 +30,28 @@ public class ChMessageTypeController {
 
     @PostMapping("/insert")
     @ApiOperation(value = "新增消息类型")
-    public GlobalResult insert(@RequestBody ChMessageType dto) {
+    public GlobalResult insertMessageType(@RequestBody ChMessageType dto) {
         int result = messageTypeService.insertType(dto);
         return GlobalResult.success(result);
     }
 
     @DeleteMapping("/del/{id}")
     @ApiOperation(value = "删除消息类型")
-    public GlobalResult del(@PathVariable("id") Long id) {
+    public GlobalResult delMessageType(@PathVariable("id") Long id) {
         int result = messageTypeService.delType(id);
         return GlobalResult.success(result);
     }
 
     @PostMapping("/update")
     @ApiOperation(value = "更新消息类型")
-    public GlobalResult update(@RequestBody ChMessageType dto) {
+    public GlobalResult updateMessageType(@RequestBody ChMessageType dto) {
         int result = messageTypeService.updateType(dto);
         return GlobalResult.success(result);
     }
 
     @PostMapping("/list")
     @ApiOperation(value = "分页查询消息类型")
-    public GlobalResult list(@RequestBody ChMessageType dto,
+    public GlobalResult listPageMessageType(@RequestBody ChMessageType dto,
                              @RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize) {
         List<ChMessageType> result = messageTypeService.listPage(dto, pageNum, pageSize);

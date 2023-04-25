@@ -28,7 +28,7 @@ public class ChUserFriendController {
 
     @PostMapping("/insert")
     @ApiOperation(value = "新增用户好友关系")
-    public GlobalResult insert(@RequestBody ChUserFriend dto) {
+    public GlobalResult insertUserFriend(@RequestBody ChUserFriend dto) {
         int result = friendService.insertFriend(dto);
         if (result == 0) {
             return GlobalResult.error();
@@ -38,7 +38,7 @@ public class ChUserFriendController {
 
     @DeleteMapping("/del")
     @ApiOperation(value = "删除用户好友关系")
-    public GlobalResult del(@RequestBody ChUserFriend dto) {
+    public GlobalResult delUserFriend(@RequestBody ChUserFriend dto) {
         int result = friendService.delFriend(dto);
         if (result == 0) {
             return GlobalResult.error();
@@ -48,7 +48,7 @@ public class ChUserFriendController {
 
     @GetMapping("/list")
     @ApiOperation(value = "查询用户的好友关系")
-    public GlobalResult listFriend(@RequestParam Long userId) {
+    public GlobalResult listUserFriend(@RequestParam Long userId) {
         List<ChUserFriend> result = friendService.listFriend(userId);
         return GlobalResult.success(result);
     }

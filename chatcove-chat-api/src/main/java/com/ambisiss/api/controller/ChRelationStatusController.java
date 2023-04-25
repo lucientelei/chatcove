@@ -30,28 +30,28 @@ public class ChRelationStatusController {
 
     @PostMapping("/insert")
     @ApiOperation(value = "新增关系状态")
-    public GlobalResult insert(@RequestBody ChRelationStatusDto dto) {
+    public GlobalResult insertRelationStatus(@RequestBody ChRelationStatusDto dto) {
         int result = statusService.insertStatus(dto);
         return GlobalResult.success(result);
     }
 
     @DeleteMapping("/del/{id}")
     @ApiOperation(value = "删除关系状态")
-    public GlobalResult del(@PathVariable("id") Long id) {
+    public GlobalResult delRelationStatus(@PathVariable("id") Long id) {
         int result = statusService.delStatus(id);
         return GlobalResult.success(result);
     }
 
     @PostMapping("/update/{id}")
     @ApiOperation(value = "更新关系状态")
-    public GlobalResult update(@PathVariable("id") Long id, @RequestBody ChRelationStatusDto dto) {
+    public GlobalResult updateRelationStatus(@PathVariable("id") Long id, @RequestBody ChRelationStatusDto dto) {
         int result = statusService.updateStatus(id, dto);
         return GlobalResult.success(result);
     }
 
     @GetMapping("/list")
     @ApiOperation(value = "分页多条件查询关系状态")
-    public GlobalResult listPage(@RequestBody ChRelationStatusDto dto,
+    public GlobalResult listPageRelationStatus(@RequestBody ChRelationStatusDto dto,
                                  @RequestParam(defaultValue = "1") Integer pageNum,
                                  @RequestParam(defaultValue = "10") Integer pageSize) {
         List<ChRelationStatus> result = statusService.listPage(dto, pageNum, pageSize);

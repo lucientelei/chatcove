@@ -29,7 +29,7 @@ public class ChFriendshipApplyController {
 
     @PostMapping("/insert")
     @ApiOperation(value = "新增申请")
-    public GlobalResult insert(@RequestBody ChFriendshipApplyDto dto) {
+    public GlobalResult insertFriendshipApply(@RequestBody ChFriendshipApplyDto dto) {
         int result = applyService.insertApply(dto);
         if (result == 0) {
             return GlobalResult.error();
@@ -39,7 +39,7 @@ public class ChFriendshipApplyController {
 
     @DeleteMapping("/del/{id}")
     @ApiOperation(value = "删除申请")
-    public GlobalResult insert(@PathVariable("id") Long id) {
+    public GlobalResult delFriendshipApply(@PathVariable("id") Long id) {
         int result = applyService.delApply(id);
         if (result == 0) {
             return GlobalResult.error();
@@ -49,7 +49,7 @@ public class ChFriendshipApplyController {
 
     @PostMapping("/update/status/{id}")
     @ApiOperation(value = "更新申请状态")
-    public GlobalResult update(@PathVariable("id") Long id,
+    public GlobalResult updateFriendshipApply(@PathVariable("id") Long id,
                                @RequestParam Long statusId) {
         int result = applyService.updateStatus(id, statusId);
         if (result == 0) {
@@ -60,7 +60,7 @@ public class ChFriendshipApplyController {
 
     @GetMapping("/list")
     @ApiOperation(value = "查看申请列表")
-    public GlobalResult list(@RequestParam Long userId) {
+    public GlobalResult listFriendshipApply(@RequestParam Long userId) {
         List<ChFriendshipApply> result = applyService.listApply(userId);
         return GlobalResult.success(result);
     }

@@ -33,7 +33,7 @@ public class ChChatRecordsController {
 
     @PostMapping("/insert")
     @ApiOperation(value = "新增聊天记录")
-    public GlobalResult insert(@RequestBody @Validated ChChatRecordsDto dto) {
+    public GlobalResult insertRecords(@RequestBody @Validated ChChatRecordsDto dto) {
         int result = chChatRecordsService.insertRecords(dto);
         if (result == 0) {
             return GlobalResult.error("添加失败");
@@ -43,7 +43,7 @@ public class ChChatRecordsController {
 
     @DeleteMapping("/del")
     @ApiOperation(value = "删除聊天记录")
-    public GlobalResult del(@RequestBody List<Long> ids) {
+    public GlobalResult delRecords(@RequestBody List<Long> ids) {
         int result = chChatRecordsService.delRecords(ids);
         if (result == 0) {
             return GlobalResult.error("删除失败");
@@ -53,7 +53,7 @@ public class ChChatRecordsController {
 
     @GetMapping("/list/page")
     @ApiOperation(value = "分页获取聊天记录")
-    public GlobalResult getPage(@RequestBody @Validated ChChatRecordsPageDto dto) {
+    public GlobalResult getPageRecords(@RequestBody @Validated ChChatRecordsPageDto dto) {
         List<ChChatRecords> result = chChatRecordsService.listRecords(dto);
         return GlobalResult.success(GlobalPage.restPage(result));
     }

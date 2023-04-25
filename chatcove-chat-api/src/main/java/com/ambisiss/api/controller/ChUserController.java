@@ -29,7 +29,7 @@ public class ChUserController {
 
     @PostMapping("/register")
     @ApiOperation(value = "新增用户")
-    public GlobalResult insert(@RequestBody @Validated ChUserDto dto){
+    public GlobalResult registerUser(@RequestBody @Validated ChUserDto dto){
         int result = userService.insertUser(dto);
         if (result == -1) {
             GlobalResult.error("用户名已存在");
@@ -39,7 +39,7 @@ public class ChUserController {
 
     @PostMapping("/update")
     @ApiOperation(value = "修改用户信息")
-    public GlobalResult update(@RequestBody @Validated ChUserUpdateDto dto){
+    public GlobalResult updateUserInfo(@RequestBody @Validated ChUserUpdateDto dto){
         int result = userService.updateUser(dto);
         if (result == 0) {
             GlobalResult.error("更新失败");
@@ -49,7 +49,7 @@ public class ChUserController {
 
     @DeleteMapping("/del/{id}")
     @ApiOperation(value = "删除用户")
-    public GlobalResult del(@PathVariable("id") Long id){
+    public GlobalResult delUser(@PathVariable("id") Long id){
         int result = userService.delUser(id);
         if (result == 0) {
             GlobalResult.error("删除失败");
@@ -59,7 +59,7 @@ public class ChUserController {
 
     @GetMapping("/info/{id}")
     @ApiOperation(value = "根据ID查找用户信息")
-    public GlobalResult getById(@PathVariable("id") Long id){
+    public GlobalResult getUserById(@PathVariable("id") Long id){
         ChUserVo result = userService.getUserById(id);
         if (result == null) {
             GlobalResult.error("不存在该用户");
@@ -69,7 +69,7 @@ public class ChUserController {
 
     @GetMapping("/info")
     @ApiOperation(value = "根据ID查找用户信息")
-    public GlobalResult getByUsername(@RequestParam String username){
+    public GlobalResult getUserByUsername(@RequestParam String username){
         ChUserVo result = userService.getUserByName(username);
         if (result == null) {
             GlobalResult.error("不存在该用户");

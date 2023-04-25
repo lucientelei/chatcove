@@ -30,7 +30,7 @@ public class ChFriendRelationshipController {
 
     @PostMapping("/insert")
     @ApiOperation(value = "新增好友关系")
-    public GlobalResult insert(@RequestBody ChFriendRelationshipDto dto) {
+    public GlobalResult insertFriendRelationship(@RequestBody ChFriendRelationshipDto dto) {
         int result = relationshipService.insertShip(dto);
         if (result == 0) {
             return GlobalResult.error();
@@ -40,7 +40,7 @@ public class ChFriendRelationshipController {
 
     @DeleteMapping("/del/{id}")
     @ApiOperation(value = "删除好友关系")
-    public GlobalResult del(@PathVariable("id") Long id) {
+    public GlobalResult delFriendRelationship(@PathVariable("id") Long id) {
         int result = relationshipService.delShip(id);
         if (result == 0) {
             return GlobalResult.error();
@@ -50,7 +50,7 @@ public class ChFriendRelationshipController {
 
     @PostMapping("/update/status")
     @ApiOperation(value = "更新好友关系状态")
-    public GlobalResult updateStatus(@RequestParam Long id,
+    public GlobalResult updateFriendRelationshipStatus(@RequestParam Long id,
                                      @RequestParam Long statusId) {
         int result = relationshipService.updateStatus(id, statusId);
         if (result == 0) {
@@ -61,7 +61,7 @@ public class ChFriendRelationshipController {
 
     @PostMapping("/update/istop")
     @ApiOperation(value = "更新好友置顶状态")
-    public GlobalResult updateIsTop(@RequestParam Long id,
+    public GlobalResult updateFriendRelationshipIsTop(@RequestParam Long id,
                                     @RequestParam Integer isTop) {
         int result = relationshipService.updateIsTop(id, isTop);
         if (result == 0) {
@@ -72,7 +72,7 @@ public class ChFriendRelationshipController {
 
     @GetMapping("/list/{userId}")
     @ApiOperation(value = "获取用户好友列表")
-    public GlobalResult list(@PathVariable("userId") Long userId) {
+    public GlobalResult listFriendRelationship(@PathVariable("userId") Long userId) {
         List<ChFriendRelationshipBo> result = relationshipService.listFriend(userId);
         return GlobalResult.success(result);
     }
