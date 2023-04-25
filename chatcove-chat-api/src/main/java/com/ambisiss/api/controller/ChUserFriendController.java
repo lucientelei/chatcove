@@ -19,7 +19,7 @@ import java.util.List;
  * @since 2023-04-20
  */
 @RestController
-@RequestMapping("/chUserFriend")
+@RequestMapping("/api/chat/chUserFriend")
 @Api(tags = "用户好友接口")
 public class ChUserFriendController {
 

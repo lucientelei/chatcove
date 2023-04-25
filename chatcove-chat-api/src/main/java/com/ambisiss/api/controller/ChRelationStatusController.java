@@ -21,7 +21,7 @@ import java.util.List;
  * @since 2023-04-20
  */
 @RestController
-@RequestMapping("/chRelationStatus")
+@RequestMapping("/api/chat/chRelationStatus")
 @Api(tags = "好友关系状态接口")
 public class ChRelationStatusController {
 

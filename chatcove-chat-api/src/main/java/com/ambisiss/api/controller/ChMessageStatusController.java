@@ -20,7 +20,7 @@ import java.util.List;
  * @since 2023-04-20
  */
 @RestController
-@RequestMapping("/chMessageStatus")
+@RequestMapping("/api/chat/chMessageStatus")
 @Api(tags = "消息状态接口")
 public class ChMessageStatusController {
 

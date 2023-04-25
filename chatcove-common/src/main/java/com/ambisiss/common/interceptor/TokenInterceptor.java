@@ -1,5 +1,6 @@
 package com.ambisiss.common.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ambisiss.common.constant.HttpStatus;
 import com.ambisiss.common.global.GlobalResult;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,10 +30,11 @@ import java.lang.reflect.Method;
  * @Data: 2023-4-23 11:59:31
  */
 @Slf4j
-public class TokenInterceptor implements HandlerInterceptor  {
+public class TokenInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtUtils jwtUtil;
+
 
     /**
      * 前置拦截
@@ -44,10 +47,16 @@ public class TokenInterceptor implements HandlerInterceptor  {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("前置拦截");
+        log.info("前置拦截:" + request.getRequestURI());
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+
         //servlet请求响应转换
         String token = request.getHeader("Authorization");
         if (StringUtils.isEmpty(token)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.getWriter().write(JSON.toJSONString(GlobalResult.error(HttpStatus.UNAUTHORIZED, "未登录")));
             return false;
         }
         //跨域时会首先发送一个option请求，给option请求直接返回正常状态 200
@@ -78,7 +87,6 @@ public class TokenInterceptor implements HandlerInterceptor  {
     protected void fillCorsHeader(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-control-Allow-Origin", request.getHeader("Origin"));
         response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,HEAD");
-        response.setHeader("Access-Control-Allow-Headers",
-                request.getHeader("Access-Control-Request-Headers"));
+        response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
     }
 }

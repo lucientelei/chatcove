@@ -21,7 +21,7 @@ import java.util.List;
  * @since 2023-04-20
  */
 @RestController
-@RequestMapping("/chMessageType")
+@RequestMapping("/api/chat/chMessageType")
 @Api(tags = "消息类型接口")
 public class ChMessageTypeController {
 

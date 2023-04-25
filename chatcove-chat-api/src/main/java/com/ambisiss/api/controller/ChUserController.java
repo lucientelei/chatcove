@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.*;
  * @since 2023-04-20
  */
 @RestController
-@RequestMapping("/chUser")
+@RequestMapping("/api/chat/chUser")
 @Api(tags = "用户管理接口")
 public class ChUserController {
 
     @Autowired
     private ChUserService userService;
 
-    @PostMapping("/insert")
+    @PostMapping("/register")
     @ApiOperation(value = "新增用户")
     public GlobalResult insert(@RequestBody @Validated ChUserDto dto){
         int result = userService.insertUser(dto);

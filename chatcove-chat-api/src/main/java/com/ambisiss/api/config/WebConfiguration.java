@@ -30,14 +30,12 @@ public class WebConfiguration implements WebMvcConfigurer {
         log.info("注入interceptors");
         List<String> excludePath = new ArrayList<>();
 
-        // 排除拦截，除了注册登录（此时还没TOKEN）,其他都拦截
-        excludePath.add("/register");
-        excludePath.add("/login/**");
+        // 白名单
+        excludePath.add("/api/chat/**/login");
+        excludePath.add("/api/chat/**/register");
+        excludePath.add("/favicon.ico");
         excludePath.add("/static/**");
-        excludePath.add("/assets/**");
-        excludePath.add("/assets/**");
         excludePath.add("/swagger-ui.html");
-        excludePath.add("/null/**");
         excludePath.add("/swagger-resources/**");
         excludePath.add("/swagger/**");
         excludePath.add("/webjars/**");

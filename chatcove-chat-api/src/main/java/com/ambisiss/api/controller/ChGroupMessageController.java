@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2023-04-20
  */
 @RestController
-@RequestMapping("/chGroupMessage")
+@RequestMapping("/api/chat/chGroupMessage")
 public class ChGroupMessageController {
 
 }

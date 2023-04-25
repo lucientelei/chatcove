@@ -24,7 +24,7 @@ import java.util.List;
  * @since 2023-04-20
  */
 @RestController
-@RequestMapping("/chChatRecords")
+@RequestMapping("/api/chat/chChatRecords")
 @Api(tags = "用户聊天记录接口")
 public class ChChatRecordsController {
 
