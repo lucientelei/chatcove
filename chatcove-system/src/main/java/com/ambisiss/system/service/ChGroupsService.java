@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ChGroupsService extends IService<ChGroups> {
 
+//    int insertGroup();
 }

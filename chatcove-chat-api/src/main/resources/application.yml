@@ -35,4 +35,4 @@ jwt:
   # secret: 秘钥(普通字符串) 不能太短，太短可能会导致报错
   secret: T1Bm7sLdHfRy6V8gjK4a
   # 签发者
-  issuer: ambisiss
+  issuer: admin

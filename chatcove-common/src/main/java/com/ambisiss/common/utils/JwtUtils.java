@@ -1,141 +1,176 @@
 package com.ambisiss.common.utils;
 
+import com.ambisiss.common.config.JwtConfig;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author ambisiss
+ */
 @Slf4j
 @Component
-@ConfigurationProperties(prefix = "jwt")
 public class JwtUtils {
 
     /**
-     * 秘钥
+     * 过期时间
      */
-    private String secret;
+    private static long expire = 5184000L;
 
     /**
-     * 有效时间
+     * 制密钥
      */
-    private Long expire;
+    private static String secret = "T1Bm7sLdHfRy6V8gjK4a";
 
     /**
-     * 用户凭证
+     * 请求头
      */
-    private String header;
+    private static String header = "Authorization";
 
     /**
      * 签发者
      */
-    private String issuer;
+    private static String issuer = "admin";
+
 
     /**
-     * 生成token签名
+     * 验证token是否正确
      *
-     * @param subject 用户ID（唯一）
+     * @param token
+     * @param username
      * @return
      */
-    public String createToken(Long subject) {
-        Date now = new Date();
-        // 过期时间
-        Date expireDate = new Date(now.getTime() + expire * 1000);
-
-        //创建Signature SecretKey
-        final SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-
-        //header参数
-        final Map<String, Object> headerMap = new HashMap<>();
-        headerMap.put("alg", "HS256");
-        headerMap.put("typ", "JWT");
-
-        //生成token
-        String token = Jwts.builder()
-                .setHeaderParam("typ", "JWT")
-                .setSubject(String.valueOf(subject))
-//                .setIssuedAt(nowDate)
-//                .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
-
-        log.info("JWT[" + token + "]");
-        return token;
+    public static boolean verify(String token, String username) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            JWTVerifier jwtVerifier = JWT.require(algorithm).withClaim("username", username).build();
+            jwtVerifier.verify(token);
+            return true;
+        } catch (JWTVerificationException e) {
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
-     * 解析token
+     * 获取token自定义信息
+     * 获取token的username，无需secret解密也能获得
      *
-     * @param token token
+     * @param token
+     * @param filed
      * @return
      */
-    public Claims parseToken(String token) {
-
-        Claims claims = null;
+    public static String getClaimFiled(String token, String filed) {
         try {
-            //创建Signature SecretKey
-            final SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-
-            claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-            log.info("Parse JWT token success");
-        } catch (JwtException e) {
-            log.info("Parse JWT errror " + e.getMessage());
+            DecodedJWT decode = JWT.decode(token);
+            return decode.getClaim(filed).asString();
+        } catch (JWTDecodeException e) {
+            e.printStackTrace();
             return null;
         }
-        return claims;
     }
 
     /**
-     * 通过token获取用户ID
+     * 生成token
+     *
+     * @param username
+     * @return
+     */
+    public static String createToken(String username) {
+        try {
+//            Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.create()
+                    .withClaim("username", username)
+                    .withIssuer(issuer)
+                    .sign(algorithm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 获取token签发时间
      *
      * @param token
      * @return
      */
-    public Long getUserIdFromToken(String token) {
-        return Long.valueOf(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject());
+    public static Date getIssueAt(String token) {
+        try {
+            DecodedJWT decode = JWT.decode(token);
+            return decode.getIssuedAt();
+        } catch (JWTDecodeException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
-     * 判断token是否过期
+     * 验证token是否过期
      *
-     * @param expiration
+     * @param token
      * @return
      */
-    public boolean isExpired(Date expiration) {
-        return expiration.before(new Date());
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public void setExpire(Long expire) {
-        this.expire = expire;
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
+    public static boolean isTokenExpired(String token) {
+        Date time = Calendar.getInstance().getTime();
+        DecodedJWT jwt = JWT.decode(token);
+        return jwt.getExpiresAt().before(time);
     }
 
     /**
-     * 用于其他地方获取Header配置信息
+     * 刷新token时间
      *
+     * @param token
+     * @param secret
      * @return
      */
-    public String getHeader() {
-        return header;
+    public static String refreshTokenExpired(String token, String secret) {
+        //解析token
+        DecodedJWT jwt = JWT.decode(token);
+        //获取token的参数信息
+        Map<String, Claim> claims = jwt.getClaims();
+        try {
+            Date date = new Date(System.currentTimeMillis() + expire);
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            JWTCreator.Builder builder = JWT.create().withExpiresAt(date);
+            for (Map.Entry<String, Claim> entry : claims.entrySet()) {
+                builder.withClaim(entry.getKey(), entry.getValue().asString());
+            }
+            return builder.sign(algorithm);
+        } catch (JWTCreationException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public void setIssuer(String issuer) {
-        this.issuer = issuer;
+    public Claims getClaimByToken(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            log.debug("validate is token error ", e);
+            return null;
+        }
     }
 }

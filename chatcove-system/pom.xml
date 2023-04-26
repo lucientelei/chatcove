@@ -43,11 +43,17 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-        <!-- 通用依赖 -->
+        <!-- 安全框架依赖 -->
         <dependency>
             <groupId>com.ambisiss</groupId>
-            <artifactId>chatcove-common</artifactId>
+            <artifactId>chatcove-security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!-- 通用依赖 -->
+<!--        <dependency>-->
+<!--            <groupId>com.ambisiss</groupId>-->
+<!--            <artifactId>chatcove-common</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
     </dependencies>
 </project>

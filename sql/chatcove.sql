@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 25/04/2023 18:39:58
+ Date: 26/04/2023 22:52:11
 */
 
 SET NAMES utf8mb4;
@@ -234,6 +234,7 @@ CREATE TABLE `ch_user`  (
 -- ----------------------------
 -- Records of ch_user
 -- ----------------------------
+INSERT INTO `ch_user` VALUES (1100717328552689664, 'ambisiss', '$2a$10$a5IJ5v6lS9zJnvfLuJgsI.6dEBtzofqnweQ6wgHdXn5Yjxriki2Ki', NULL, NULL, NULL, NULL, NULL, '2023-04-26 09:37:42', NULL);
 
 -- ----------------------------
 -- Table structure for ch_user_friend

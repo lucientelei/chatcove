@@ -79,9 +79,9 @@ public class GlobalResult<T> extends HashMap<String, Object> {
      * @param msg 返回内容
      * @return 成功消息
      */
-    public static GlobalResult success(String msg) {
-        return GlobalResult.success(msg, null);
-    }
+//    public static GlobalResult success(String msg) {
+//        return GlobalResult.success(msg, null);
+//    }
 
     /**
      * 返回成功消息

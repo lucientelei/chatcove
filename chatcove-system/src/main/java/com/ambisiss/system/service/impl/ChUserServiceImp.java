@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -29,9 +30,6 @@ public class ChUserServiceImp extends ServiceImpl<ChUserDao, ChUser> implements 
     @Autowired
     private ChUserDao userDao;
 
-    @Autowired
-    private JwtUtils jwtUtils;
-
     @Override
     public int insertUser(ChUserInsertUpdateDto dto) {
         ChUser user = new ChUser();
@@ -46,9 +44,9 @@ public class ChUserServiceImp extends ServiceImpl<ChUserDao, ChUser> implements 
         SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0L, 0L);
         user.setId(generator.generateNextId());
         //设置密码
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        String encodePassword = passwordEncoder.encode(dto.getPassword());
-//        user.setPassword(encodePassword);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodePassword = passwordEncoder.encode(dto.getPassword());
+        user.setPassword(encodePassword);
         return userDao.insert(user);
     }
 
@@ -90,13 +88,11 @@ public class ChUserServiceImp extends ServiceImpl<ChUserDao, ChUser> implements 
         if (StringUtils.isEmpty(user)) {
             return "-1";
         }
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        System.out.println(user.getPassword());
-//        System.out.println(passwordEncoder.encode(dto.getPassword()));
-//        boolean matches = passwordEncoder.matches(user.getPassword(), passwordEncoder.encode(dto.getPassword()));
-//        if (matches) {
-//            return jwtUtils.createToken(user.getId());
-//        }
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean matches = passwordEncoder.matches(dto.getPassword(), user.getPassword());
+        if (matches) {
+            return JwtUtils.createToken(user.getUsername());
+        }
         return "-1";
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
  * @Description:
  * @Data: 2023-4-20 14:24:18
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class ChatCoveAPP {
     public static void main(String[] args) {
         SpringApplication.run(ChatCoveAPP.class, args);

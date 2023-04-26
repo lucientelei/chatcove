@@ -28,7 +28,7 @@ public class ChUserController {
     private ChUserService userService;
 
     @PostMapping("/register")
-    @ApiOperation(value = "用户注册")
+    @ApiOperation(value = "用户注册", notes = "-1：用户名重名")
     public GlobalResult registerUser(@RequestBody @Validated ChUserInsertUpdateDto dto) {
         int result = userService.insertUser(dto);
         return GlobalResult.success(result);
@@ -63,7 +63,7 @@ public class ChUserController {
     }
 
     @PostMapping("/login")
-    @ApiOperation(value = "用户登录")
+    @ApiOperation(value = "用户登录", notes = "-1用户名或密码错误")
     public GlobalResult userLogin(@RequestBody ChUserDto dto) {
         String token = userService.userLogin(dto);
         return GlobalResult.success(token);

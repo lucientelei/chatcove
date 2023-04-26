@@ -33,7 +33,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         // 白名单
         excludePath.add("/api/chat/**/login");
         excludePath.add("/api/chat/**/register");
-        excludePath.add("/api/chat/chUser/register");
+//        excludePath.add("/api/chat/chUser/register");
         excludePath.add("/favicon.ico");
         excludePath.add("/error");
         excludePath.add("/static/**");
