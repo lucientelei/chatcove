@@ -1,6 +1,6 @@
 package com.ambisiss.system.mapper;
 
-import com.ambisiss.system.entity.ChGroups;
+import com.ambisiss.system.entity.ChGroupsAdminRelation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-04-27
  */
 @Mapper
-public interface ChGroupsDao extends BaseMapper<ChGroups> {
+public interface ChGroupsAdminRelationDao extends BaseMapper<ChGroupsAdminRelation> {
 
 }

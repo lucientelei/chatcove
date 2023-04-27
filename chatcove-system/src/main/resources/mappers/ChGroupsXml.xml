@@ -9,11 +9,12 @@
         <result column="description" property="description" />
         <result column="admin_id" property="adminId" />
         <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, description, admin_id, create_time
+        id, name, description, admin_id, create_time, update_time
     </sql>
 
 </mapper>

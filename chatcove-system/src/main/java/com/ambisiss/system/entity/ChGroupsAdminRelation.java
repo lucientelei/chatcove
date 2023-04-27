@@ -24,24 +24,21 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName("ch_groups")
-@ApiModel(value = "ChGroups对象", description = "")
-public class ChGroups implements Serializable {
+@TableName("ch_groups_admin_relation")
+@ApiModel(value = "ChGroupsAdminRelation对象", description = "")
+public class ChGroupsAdminRelation implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private String name;
+    @ApiModelProperty("群组ID")
+    private Long groupId;
 
-    private String description;
-
-    private Long adminId;
+    @ApiModelProperty("管理员ID")
+    private Long userId;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
 }
