@@ -15,4 +15,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ChUserDao extends BaseMapper<ChUser> {
 
+    /**
+     * 通过用户名获取用户ID
+     * @param username
+     * @return
+     */
+    Long getIdByUsername(String username);
 }

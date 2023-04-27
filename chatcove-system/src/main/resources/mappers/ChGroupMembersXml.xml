@@ -17,4 +17,8 @@
         id, group_id, member_id, group_nickname, join_time, update_time
     </sql>
 
+    <!-- 查询用户群组群昵称 -->
+    <select id="selectGroupNickname" resultType="java.lang.String">
+        SELECT group_nickname FROM ch_group_members WHERE group_id = ${groupId} AND member_id = ${memberId};
+    </select>
 </mapper>

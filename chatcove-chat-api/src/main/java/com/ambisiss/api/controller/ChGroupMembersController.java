@@ -41,9 +41,9 @@ public class ChGroupMembersController {
         return GlobalResult.success(result);
     }
 
-    @GetMapping("/listMember/{groupId}")
+    @GetMapping("/listMember")
     @ApiOperation(value = "获取群组成员")
-    public GlobalResult listMember(@PathVariable("groupId") Long groupId){
+    public GlobalResult listMember(@RequestParam Long groupId){
         List<ChGroupMembersVo> result = groupMembersService.listMember(groupId);
         return GlobalResult.success(result);
     }

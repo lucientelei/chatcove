@@ -1,6 +1,5 @@
 package com.ambisiss.common.utils;
 
-import com.ambisiss.common.config.JwtConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
@@ -31,22 +30,22 @@ public class JwtUtils {
     /**
      * 过期时间
      */
-    private static long expire = 5184000L;
+    public static long expire = 5184000L;
 
     /**
      * 制密钥
      */
-    private static String secret = "T1Bm7sLdHfRy6V8gjK4a";
+    public static String secret = "T1Bm7sLdHfRy6V8gjK4a";
 
     /**
      * 请求头
      */
-    private static String header = "Authorization";
+    public static String header = "Authorization";
 
     /**
      * 签发者
      */
-    private static String issuer = "admin";
+    public static String issuer = "admin";
 
 
     /**

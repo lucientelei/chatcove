@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author chenxiaoye
@@ -15,4 +15,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ChGroupMembersDao extends BaseMapper<ChGroupMembers> {
 
+    /**
+     * 查询用户群组群昵称
+     * @param groupId   群聊ID
+     * @param memberId  用户ID
+     * @return
+     */
+    String selectGroupNickname(Long groupId, Long memberId);
 }

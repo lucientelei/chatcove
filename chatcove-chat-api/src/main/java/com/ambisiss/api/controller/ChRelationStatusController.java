@@ -35,16 +35,16 @@ public class ChRelationStatusController {
         return GlobalResult.success(result);
     }
 
-    @DeleteMapping("/del/{id}")
+    @DeleteMapping("/del")
     @ApiOperation(value = "删除关系状态")
-    public GlobalResult delRelationStatus(@PathVariable("id") Long id) {
+    public GlobalResult delRelationStatus(@RequestParam Long id) {
         int result = statusService.delStatus(id);
         return GlobalResult.success(result);
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     @ApiOperation(value = "更新关系状态")
-    public GlobalResult updateRelationStatus(@PathVariable("id") Long id, @RequestBody ChRelationStatusDto dto) {
+    public GlobalResult updateRelationStatus(@RequestParam Long id, @RequestBody ChRelationStatusDto dto) {
         int result = statusService.updateStatus(id, dto);
         return GlobalResult.success(result);
     }

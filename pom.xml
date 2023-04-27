@@ -22,6 +22,8 @@
         <module>chatcove-chat-api</module>
         <module>chatcove-common</module>
         <module>chatcove-security</module>
+        <module>chatcove-websocket</module>
+        <module>chatcove-kafka</module>
     </modules>
 
     <!--  版本号管理  -->
@@ -41,6 +43,7 @@
         <pagehelper.version>1.3.0</pagehelper.version>
         <jjwt.version>0.9.1</jjwt.version>
         <java-jwt.version>3.11.0</java-jwt.version>
+        <spring-kafka.version>2.5.10.RELEASE</spring-kafka.version>
     </properties>
 
     <!--  依赖管理  -->
@@ -168,6 +171,18 @@
                 <artifactId>spring-boot-configuration-processor</artifactId>
                 <optional>true</optional>
                 <version>${springboot.version}</version>
+            </dependency>
+            <!-- websocket-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-websocket</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+            <!-- kafka -->
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${spring-kafka.version}</version>
             </dependency>
             <!--  热部署  -->
             <dependency>

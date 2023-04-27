@@ -31,13 +31,13 @@ public class ChFriendRelationshipServiceImp extends ServiceImpl<ChFriendRelation
 
     @Override
     public int insertShip(ChFriendRelationshipDto dto) {
-        ChFriendRelationship relationship = new ChFriendRelationship();
-        BeanUtils.copyProperties(dto, relationship);
+        ChFriendRelationship userFriendShip = new ChFriendRelationship();
+        BeanUtils.copyProperties(dto, userFriendShip);
         //默认是未确认状态
-        relationship.setStatusId(RelationEnum.UNCONFIRMED.getId());
+        userFriendShip.setStatusId(RelationEnum.UNCONFIRMED.getId());
         //默认不是置顶状态
-        relationship.setIsTop(0);
-        return friendRelationshipDao.insert(relationship);
+        userFriendShip.setIsTop(0);
+        return friendRelationshipDao.insert(userFriendShip);
     }
 
     @Override

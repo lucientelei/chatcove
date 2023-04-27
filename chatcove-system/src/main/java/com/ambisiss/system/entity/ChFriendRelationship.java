@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author chenxiaoye
- * @since 2023-04-23
+ * @since 2023-04-27
  */
 @Getter
 @Setter
@@ -34,10 +34,12 @@ public class ChFriendRelationship implements Serializable {
 
     private Long friendId;
 
+    @ApiModelProperty("好友备注名称")
+    private String friendNickname;
+
     @ApiModelProperty("添加状态")
     private Long statusId;
 
     @ApiModelProperty("是否置顶联系人 1：是 0：否")
     private Integer isTop;
-
 }

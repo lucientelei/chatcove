@@ -34,9 +34,9 @@ public class ChMessageStatusController {
         return GlobalResult.success(result);
     }
 
-    @DeleteMapping("/del/{id}")
+    @DeleteMapping("/del")
     @ApiOperation(value = "删除消息状态")
-    public GlobalResult delMessageStatus(@PathVariable("id") Long id) {
+    public GlobalResult delMessageStatus(@RequestParam Long id) {
         int result = statusService.delStatus(id);
         return GlobalResult.success(result);
     }

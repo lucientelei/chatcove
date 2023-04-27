@@ -40,9 +40,9 @@ public class ChGroupsAdminRelationController {
         return GlobalResult.success(result);
     }
 
-    @GetMapping("/list/admin/{groupId}")
+    @GetMapping("/list/admin")
     @ApiOperation(value = "获取群组管理员列表")
-    public GlobalResult insertRelation(@PathVariable("groupId") Long groupId){
+    public GlobalResult insertRelation(@RequestParam Long groupId){
         List<Long> result = relationService.getGroupAdmin(groupId);
         return GlobalResult.success(result);
     }

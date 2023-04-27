@@ -7,13 +7,14 @@
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="friend_id" property="friendId" />
+        <result column="friend_nickname" property="friendNickname" />
         <result column="status_id" property="statusId" />
         <result column="is_top" property="isTop" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, friend_id, status_id, is_top
+        id, user_id, friend_id, friend_nickname, status_id, is_top
     </sql>
 
 </mapper>

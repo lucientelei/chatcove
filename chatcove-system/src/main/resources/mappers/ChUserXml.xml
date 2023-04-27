@@ -20,5 +20,8 @@
     <sql id="Base_Column_List">
         id, username, password, gender, avatar, phone, email, signature, create_time, update_time
     </sql>
+    <select id="getIdByUsername" resultType="java.lang.Long">
+        SELECT id FROM ch_user WHERE username = ${username};
+    </select>
 
 </mapper>

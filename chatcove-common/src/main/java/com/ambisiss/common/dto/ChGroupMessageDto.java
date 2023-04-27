@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @Setter
-@Accessors(chain = true)
 @ApiModel(value = "ChGroupMessageDto对象", description = "群组消息传输对象")
 public class ChGroupMessageDto {
 

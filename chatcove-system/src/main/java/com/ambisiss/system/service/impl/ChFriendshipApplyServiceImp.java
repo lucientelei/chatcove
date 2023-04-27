@@ -1,9 +1,11 @@
 package com.ambisiss.system.service.impl;
 
 import com.ambisiss.common.constant.RelationEnum;
+import com.ambisiss.common.dto.ChFriendRelationshipDto;
 import com.ambisiss.common.dto.ChFriendshipApplyDto;
 import com.ambisiss.system.entity.ChFriendshipApply;
 import com.ambisiss.system.mapper.ChFriendshipApplyDao;
+import com.ambisiss.system.service.ChFriendRelationshipService;
 import com.ambisiss.system.service.ChFriendshipApplyService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,6 +30,9 @@ public class ChFriendshipApplyServiceImp extends ServiceImpl<ChFriendshipApplyDa
     @Autowired
     private ChFriendshipApplyDao applyDao;
 
+    @Autowired
+    private ChFriendRelationshipService friendRelationshipService;
+
     @Override
     public int insertApply(ChFriendshipApplyDto dto) {
         ChFriendshipApply apply = new ChFriendshipApply();
@@ -44,6 +49,12 @@ public class ChFriendshipApplyServiceImp extends ServiceImpl<ChFriendshipApplyDa
     @Override
     public int updateStatus(Long id, Long statusId) {
         ChFriendshipApply apply = applyDao.selectById(id);
+        //TODO 接收申请人同意后插入好友关系
+//        if (RelationEnum.CONFIRMED.getId().equals(statusId)) {
+//            ChFriendRelationshipDto dto = new ChFriendRelationshipDto();
+//            dto.setUserId(apply.getFriendId())
+//            friendRelationshipService.insertShip()
+//        }
         apply.setStatusId(statusId);
         return applyDao.updateById(apply);
     }

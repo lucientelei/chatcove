@@ -43,9 +43,9 @@ public class ChFriendshipApplyController {
         return GlobalResult.success(result);
     }
 
-    @PostMapping("/update/status/{id}")
+    @PostMapping("/update/status")
     @ApiOperation(value = "更新申请状态")
-    public GlobalResult updateFriendshipApply(@PathVariable("id") Long id,
+    public GlobalResult updateFriendshipApply(@RequestParam Long id,
                                @RequestParam Long statusId) {
         int result = applyService.updateStatus(id, statusId);
 

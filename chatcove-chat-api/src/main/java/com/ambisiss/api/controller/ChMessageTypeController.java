@@ -35,9 +35,9 @@ public class ChMessageTypeController {
         return GlobalResult.success(result);
     }
 
-    @DeleteMapping("/del/{id}")
+    @DeleteMapping("/del")
     @ApiOperation(value = "删除消息类型")
-    public GlobalResult delMessageType(@PathVariable("id") Long id) {
+    public GlobalResult delMessageType(@RequestParam Long id) {
         int result = messageTypeService.delType(id);
         return GlobalResult.success(result);
     }

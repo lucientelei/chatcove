@@ -34,23 +34,24 @@ public class ChUserController {
         return GlobalResult.success(result);
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     @ApiOperation(value = "修改用户信息")
-    public GlobalResult updateUserInfo(@PathVariable("id") Long id, @RequestBody @Validated ChUserInsertUpdateDto dto) {
+    public GlobalResult updateUserInfo(@RequestParam Long id,
+                                       @RequestBody @Validated ChUserInsertUpdateDto dto) {
         int result = userService.updateUser(id, dto);
         return GlobalResult.success(result);
     }
 
-    @DeleteMapping("/del/{id}")
+    @DeleteMapping("/del")
     @ApiOperation(value = "删除用户")
-    public GlobalResult delUser(@PathVariable("id") Long id) {
+    public GlobalResult delUser(@RequestParam Long id) {
         int result = userService.delUser(id);
         return GlobalResult.success(result);
     }
 
-    @GetMapping("/info/{id}")
+    @GetMapping("/info")
     @ApiOperation(value = "根据ID查找用户信息")
-    public GlobalResult getUserById(@PathVariable("id") Long id) {
+    public GlobalResult getUserById(@RequestParam Long id) {
         ChUserVo result = userService.getUserById(id);
         return GlobalResult.success(result);
     }

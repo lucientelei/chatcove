@@ -35,9 +35,9 @@ public class ChFriendRelationshipController {
         return GlobalResult.success(result);
     }
 
-    @DeleteMapping("/del/{id}")
+    @DeleteMapping("/del")
     @ApiOperation(value = "删除好友关系")
-    public GlobalResult delFriendRelationship(@PathVariable("id") Long id) {
+    public GlobalResult delFriendRelationship(@RequestParam Long id) {
         int result = relationshipService.delShip(id);
         return GlobalResult.success(result);
     }
@@ -58,9 +58,9 @@ public class ChFriendRelationshipController {
         return GlobalResult.success(result);
     }
 
-    @GetMapping("/list/{userId}")
+    @GetMapping("/list")
     @ApiOperation(value = "获取用户好友列表")
-    public GlobalResult listFriendRelationship(@PathVariable("userId") Long userId) {
+    public GlobalResult listFriendRelationship(@RequestParam Long userId) {
         List<ChFriendRelationshipBo> result = relationshipService.listFriend(userId);
         return GlobalResult.success(result);
     }
