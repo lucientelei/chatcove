@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * @Author: chenxiaoye
  * @Description:
@@ -21,7 +23,10 @@ public class ChGroupsInsertDto {
     @ApiModelProperty("群组名称")
     private String name;
 
+    @ApiModelProperty("群组管理员名单")
+    private List<Long> adminList;
 
-    private Long adminId;
+    @ApiModelProperty("群组成员名单")
+    private List<Long> memberList;
 
 }

@@ -35,10 +35,6 @@ public class ChGroups implements Serializable {
 
     private String name;
 
-    private String description;
-
-    private Long adminId;
-
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 

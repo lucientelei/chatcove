@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @TableName("ch_groups_admin_relation")
-@ApiModel(value = "ChGroupsAdminRelation对象", description = "")
+@ApiModel(value = "ChGroupsAdminRelation对象", description = "群组管理员关系表")
 public class ChGroupsAdminRelation implements Serializable {
 
     private static final long serialVersionUID = 1L;

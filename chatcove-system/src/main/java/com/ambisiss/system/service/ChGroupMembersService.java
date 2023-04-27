@@ -1,7 +1,11 @@
 package com.ambisiss.system.service;
 
+import com.ambisiss.common.dto.ChGroupMembersDto;
+import com.ambisiss.common.vo.ChGroupMembersVo;
 import com.ambisiss.system.entity.ChGroupMembers;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,24 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ChGroupMembersService extends IService<ChGroupMembers> {
 
+    /**
+     * 添加群组成员
+     * @param dto
+     * @return
+     */
+    int insertMember(ChGroupMembersDto dto);
+
+    /**
+     * 删除群组成员
+     * @param dto
+     * @return
+     */
+    int delMember(ChGroupMembersDto dto);
+
+    /**
+     * 获取群组成员列表
+     * @param groupId
+     * @return
+     */
+    List<ChGroupMembersVo> listMember(Long groupId);
 }

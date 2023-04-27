@@ -1,7 +1,15 @@
 package com.ambisiss.api.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ambisiss.common.dto.ChGroupMembersDto;
+import com.ambisiss.common.global.GlobalResult;
+import com.ambisiss.common.vo.ChGroupMembersVo;
+import com.ambisiss.system.service.ChGroupMembersService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,6 +21,30 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/chat/chGroupMembers")
+@Api(tags = "ChGroupMembersController", description = "群组成员接口")
 public class ChGroupMembersController {
 
+    @Autowired
+    private ChGroupMembersService groupMembersService;
+
+    @PostMapping("/insertMember")
+    @ApiOperation(value = "新增群组成员")
+    public GlobalResult insertMember(@RequestBody ChGroupMembersDto dto){
+        int result = groupMembersService.insertMember(dto);
+        return GlobalResult.success(result);
+    }
+
+    @DeleteMapping("/delMember")
+    @ApiOperation(value = "删除群组成员")
+    public GlobalResult delMember(@RequestBody ChGroupMembersDto dto){
+        int result = groupMembersService.delMember(dto);
+        return GlobalResult.success(result);
+    }
+
+    @GetMapping("/listMember/{groupId}")
+    @ApiOperation(value = "获取群组成员")
+    public GlobalResult listMember(@PathVariable("groupId") Long groupId){
+        List<ChGroupMembersVo> result = groupMembersService.listMember(groupId);
+        return GlobalResult.success(result);
+    }
 }

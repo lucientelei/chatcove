@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author chenxiaoye
- * @since 2023-04-20
+ * @since 2023-04-27
  */
 @Getter
 @Setter
@@ -37,10 +37,11 @@ public class ChGroupMembers implements Serializable {
 
     private Long memberId;
 
+    @ApiModelProperty("群昵称")
+    private String groupNickname;
+
     private LocalDateTime joinTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
-
-
 }

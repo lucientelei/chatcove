@@ -1,5 +1,6 @@
 package com.ambisiss.system.service;
 
+import com.ambisiss.common.dto.ChGroupsInsertDto;
 import com.ambisiss.system.entity.ChGroups;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,5 +14,19 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ChGroupsService extends IService<ChGroups> {
 
-    int insertGroup();
+    /**
+     * 新增群组
+     * @param dto
+     * @return
+     */
+    int insertGroup(ChGroupsInsertDto dto);
+
+    /**
+     * 解散群组
+     * @param id
+     * @return
+     */
+    int delGroup(Long id);
+
+
 }

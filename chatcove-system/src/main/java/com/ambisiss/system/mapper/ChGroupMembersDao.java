@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author chenxiaoye
- * @since 2023-04-20
+ * @since 2023-04-27
  */
 @Mapper
 public interface ChGroupMembersDao extends BaseMapper<ChGroupMembers> {
