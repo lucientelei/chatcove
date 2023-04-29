@@ -1,20 +1,21 @@
 package com.ambisiss.kafka.listener;
 
 import com.ambisiss.kafka.consumer.SocketConsumer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
  * @Author: chenxiaoye
- * @Description:
+ * @Description: kafka消费者监听器
  * @Data: 2023-4-27 21:06:04
  */
+@Slf4j
 @Component
-public class ConsumerLinster {
+public class ConsumerListener {
 
-    public ConsumerLinster(){
-        System.out.println("启动kafka监听器");
+    public ConsumerListener() {
         SocketConsumer socketConsumer = new SocketConsumer();
         socketConsumer.start();
-        System.out.println("kafka监听器启动成功");
+        log.info("kafka监听器启动成功");
     }
 }

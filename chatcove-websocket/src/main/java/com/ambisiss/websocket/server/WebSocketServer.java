@@ -67,7 +67,7 @@ public class WebSocketServer {
         this.session = session;
         if (websocketClients.get(socketName) == null) {
             websocketClients.put(socketName, session);
-            System.out.println("当前socket通道" + socketName + "已加入连接！！！");
+            logger.info("当前socket通道" + socketName + "已加入连接！！！");
         }
     }
 
@@ -88,7 +88,7 @@ public class WebSocketServer {
     @OnClose
     public void onClose() {
         websocketClients.remove(socketName);
-        System.out.println("当前socket通道" + socketName + "已退出连接！！！");
+        logger.info("当前socket通道" + socketName + "已退出连接！！！");
     }
 
     /**
@@ -99,8 +99,8 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        System.out.println("收到了消息：" + message);
-        session.getAsyncRemote().sendText("来自服务器：" + this.socketName + "-消息收到了");
+        logger.info("收到了消息：" + message);
+        session.getAsyncRemote().sendText("来自服务器：" + this.socketName + "的消息收到了");
     }
 
     /**

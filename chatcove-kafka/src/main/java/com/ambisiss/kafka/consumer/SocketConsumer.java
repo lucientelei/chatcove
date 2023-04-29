@@ -1,6 +1,7 @@
 package com.ambisiss.kafka.consumer;
 
 import com.ambisiss.websocket.server.WebSocketServer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -14,12 +15,13 @@ import java.util.Properties;
  * @Description:
  * @Data: 2023-4-27 21:05:04
  */
-public class SocketConsumer  extends Thread{
+@Slf4j
+public class SocketConsumer extends Thread {
 
     @Override
     public void run() {
         Properties prop = new Properties();
-        System.out.println("启动kafka消费者....");
+        log.info("启动kafka消费者....");
         prop.put("bootstrap.servers", "localhost:9092");
         prop.put("group.id", "socket");
         prop.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -30,7 +32,7 @@ public class SocketConsumer  extends Thread{
         while (true) {
             ConsumerRecords<String, String> c = consumer.poll(100);
             for (ConsumerRecord<String, String> c1 : c) {
-                System.out.println(c1.value());
+                log.info("ConsumerRecord:" + c1.value());
                 WebSocketServer.sendMessage("socket", c1.value());
             }
         }

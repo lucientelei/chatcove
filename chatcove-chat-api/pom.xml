@@ -31,5 +31,15 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.ambisiss</groupId>
+            <artifactId>chatcove-websocket</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ambisiss</groupId>
+            <artifactId>chatcove-kafka</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
