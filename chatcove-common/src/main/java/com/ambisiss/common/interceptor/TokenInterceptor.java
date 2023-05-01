@@ -3,8 +3,10 @@ package com.ambisiss.common.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ambisiss.common.constant.HttpStatus;
+import com.ambisiss.common.constant.RedisConstant;
 import com.ambisiss.common.global.GlobalResult;
 import com.ambisiss.common.utils.JwtUtils;
+import com.ambisiss.common.utils.RedisUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -35,6 +37,9 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtUtils jwtUtil;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
 
     /**
      * 前置拦截
@@ -63,6 +68,10 @@ public class TokenInterceptor implements HandlerInterceptor {
             response.setStatus(HttpStatus.SUCCESS);
             return false;
         }
+        //redis中不存在token
+//        if (StringUtils.isEmpty(redisUtil.getCacheObject(RedisConstant.USER_TOKEN_PREFIX + token))) {
+//            return false;
+//        }
         return true;
     }
 

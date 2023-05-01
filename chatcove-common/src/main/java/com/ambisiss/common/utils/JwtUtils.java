@@ -93,11 +93,11 @@ public class JwtUtils {
      * @param username
      * @return
      */
-    public static String createToken(String username) {
+    public static String createToken(Long userId, String username) {
         try {
-//            Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
+                    .withClaim("userId", userId)
                     .withClaim("username", username)
                     .withIssuer(issuer)
                     .sign(algorithm);
@@ -106,6 +106,7 @@ public class JwtUtils {
             return null;
         }
     }
+
 
     /**
      * 获取token签发时间
@@ -161,7 +162,7 @@ public class JwtUtils {
         }
     }
 
-    public Claims getClaimByToken(String token) {
+    public static Claims getClaimByToken(String token) {
         try {
             return Jwts.parser()
                     .setSigningKey(secret)
@@ -172,4 +173,12 @@ public class JwtUtils {
             return null;
         }
     }
+
+    public static Map<String, Claim> getClaim(String token){
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        return decodedJWT.getClaims();
+    }
+
 }

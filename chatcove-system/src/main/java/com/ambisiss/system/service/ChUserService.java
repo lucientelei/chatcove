@@ -28,7 +28,7 @@ public interface ChUserService extends IService<ChUser> {
      * @param dto
      * @return
      */
-    int updateUser(Long id, ChUserInsertUpdateDto dto);
+    int updateUser(ChUserInsertUpdateDto dto);
 
     /**
      * 用户注销
@@ -57,4 +57,18 @@ public interface ChUserService extends IService<ChUser> {
      * @return
      */
     String userLogin(ChUserDto dto);
+
+    /**
+     * 用户退出登录
+     * @param token
+     * @return
+     */
+    int userLogout(String token);
+
+    /**
+     * 通过token获取用户信息
+     * @param token
+     * @return
+     */
+    ChUserVo getUserByToken(String token);
 }

@@ -16,6 +16,28 @@ spring:
       enabled: true
       poll-interval: 5s
       quiet-period: 3s
+  #redis
+  redis:
+    # 地址
+    host: localhost
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    database: 0
+    # 密码
+    password:
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池的最大数据库连接数
+        max-active: 8
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
   #kafka
   kafka:
     # 节点，多个节点逗号分开
@@ -24,32 +46,60 @@ spring:
     producer:
       # 重试次数
       retries: 3
+      # 批次大小 默认16k
       batch-size: 16384
+      # 缓冲区大小，默认32M
       buffer-memory: 33554432
+      # ACK应答级别，指定分区中必须要有多少个副本收到消息之后才会认为消息成功写入，默认为1只要分区的leader副本成功写入消息；0表示不需要等待任何服务端响应；-1或all需要等待ISR中所有副本都成功写入消息
       acks: 1
+      # 客户端ID
+      client-id: kafka.producer.client.id
       # 指定消息key和消息体的编解码方式
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      #消息压缩方式，默认为none，另外有gzip、snappy、lz4
+      compression-type: none
+      properties:
+        retry.backoff.ms: 100 #重试时间间隔，默认100
+        linger.ms: 0 #默认为0，表示批量发送消息之前等待更多消息加入batch的时间
+        max.request.size: 1048576 #默认1MB，表示发送消息最大值
+        connections.max.idle.ms: 540000 #默认9分钟，表示多久后关闭限制的连接
+        receive.buffer.bytes: 32768 #默认32KB，表示socket接收消息缓冲区的大小，为-1时使用操作系统默认值
+        send.buffer.bytes: 131072 #默认128KB，表示socket发送消息缓冲区大小，为-1时使用操作系统默认值
+        request.timeout.ms: 30000 #默认30000ms，表示等待请求响应的最长时间
     consumer:
-      group-id: default-group
+      #消费者组名称
+      group_id: kafka.consumer.group
+      #自动提交消费位移时间隔时间
+      auto-commit-interval: 0
       # 是否自动确认
       enable-auto-commit: false
+      #批量消费每次最多消费多少条消息
+      max-poll-records: 500
       auto-offset-reset: earliest
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    listener:
-      # 当每一条记录被消费者监听器（ListenerConsumer）处理之后提交
-      # RECORD
-      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后提交
-      # BATCH
-      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后，距离上次提交时间大于TIME时提交
-      # TIME
-      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后，被处理record数量大于等于COUNT时提交
-      # COUNT
-      # TIME |　COUNT　有一个条件满足时提交
-      # COUNT_TIME
-      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后, 手动调用Acknowledgment.acknowledge()后提交
-      # MANUAL
-      # 手动调用Acknowledgment.acknowledge()后立即提交，一般使用这种
-      # MANUAL_IMMEDIATE
-      ack-mode: manual_immediate
+      # 指定消息key和消息体的编解码方式
+      key-serializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-serializer: org.apache.kafka.common.serialization.StringDeserializer
+      #最大等待时间
+      fetch-max-wait: 400
+      #最小消费字节数
+      fetch-min-size: 1
+      #分组管理时心跳到消费者协调器之间的预计时间
+      heartbeat-interval: 3000
+      isolation-level: read_committed
+#    listener:
+#      # 当每一条记录被消费者监听器（ListenerConsumer）处理之后提交
+#      # RECORD
+#      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后提交
+#      # BATCH
+#      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后，距离上次提交时间大于TIME时提交
+#      # TIME
+#      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后，被处理record数量大于等于COUNT时提交
+#      # COUNT
+#      # TIME |　COUNT　有一个条件满足时提交
+#      # COUNT_TIME
+#      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后, 手动调用Acknowledgment.acknowledge()后提交
+#      # MANUAL
+#      # 手动调用Acknowledgment.acknowledge()后立即提交，一般使用这种
+#      # MANUAL_IMMEDIATE
+#      ack-mode: manual_immediate

@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/chat/chGroupsAdminRelation")
-@Api(tags = "ChGroupsAdminRelationController", description = "群组管理员接口")
+@Api(tags = "群组管理员接口", description = "ChGroupsAdminRelationController")
 public class ChGroupsAdminRelationController {
 
     @Autowired

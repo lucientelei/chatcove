@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ambisiss.system.entity.ChGroupMessage">
         <id column="id" property="id" />
+        <result column="message_uuid" property="messageUuid" />
         <result column="group_id" property="groupId" />
         <result column="sender_id" property="senderId" />
         <result column="message" property="message" />
@@ -14,7 +15,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, group_id, sender_id, message, message_type, create_time
+        id, message_uuid, group_id, sender_id, message, message_type, create_time
     </sql>
 
 </mapper>

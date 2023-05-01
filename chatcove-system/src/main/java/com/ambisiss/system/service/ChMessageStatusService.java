@@ -1,7 +1,6 @@
 package com.ambisiss.system.service;
 
 import com.ambisiss.system.entity.ChMessageStatus;
-import com.ambisiss.system.service.impl.ChMessageStatusServiceImp;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;

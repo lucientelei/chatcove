@@ -11,36 +11,36 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 27/04/2023 14:17:38
+ Date: 02/05/2023 00:10:18
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for ch_chat_records
+-- Table structure for ch_chat_message
 -- ----------------------------
-DROP TABLE IF EXISTS `ch_chat_records`;
-CREATE TABLE `ch_chat_records`  (
+DROP TABLE IF EXISTS `ch_chat_message`;
+CREATE TABLE `ch_chat_message`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `user_id` bigint UNSIGNED NOT NULL,
-  `friend_id` bigint UNSIGNED NOT NULL,
+  `message_uuid` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '消息唯一UUID',
+  `sender_id` bigint UNSIGNED NOT NULL COMMENT '发送者ID',
+  `receiver_id` bigint UNSIGNED NOT NULL COMMENT '接收者ID',
   `message` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `message_type_id` bigint NOT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `friend_id`(`friend_id`) USING BTREE,
+  INDEX `friend_id`(`receiver_id`) USING BTREE,
   INDEX `message_type_id`(`message_type_id`) USING BTREE,
-  INDEX `idx_user_friend_message`(`user_id`, `friend_id`, `message`(100)) USING BTREE,
-  INDEX `idx_user_friend_message_time_type`(`user_id`, `friend_id`, `message`(100), `create_time`, `message_type_id`) USING BTREE,
-  CONSTRAINT `ch_chat_records_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `ch_chat_records_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `ch_chat_records_ibfk_3` FOREIGN KEY (`message_type_id`) REFERENCES `ch_message_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  INDEX `idx_user_friend_message`(`sender_id`, `receiver_id`, `message`(100)) USING BTREE,
+  INDEX `idx_user_friend_message_time_type`(`sender_id`, `receiver_id`, `message`(100), `create_time`, `message_type_id`) USING BTREE,
+  CONSTRAINT `ch_chat_message_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `ch_chat_message_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `ch_chat_message_ibfk_3` FOREIGN KEY (`message_type_id`) REFERENCES `ch_message_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of ch_chat_records
+-- Records of ch_chat_message
 -- ----------------------------
 
 -- ----------------------------
@@ -51,6 +51,7 @@ CREATE TABLE `ch_friend_relationship`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` bigint UNSIGNED NOT NULL,
   `friend_id` bigint UNSIGNED NOT NULL,
+  `friend_nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '好友备注名称',
   `status_id` bigint NOT NULL COMMENT '添加状态',
   `is_top` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否置顶联系人 1：是 0：否',
   PRIMARY KEY (`id`) USING BTREE,
@@ -116,6 +117,7 @@ CREATE TABLE `ch_group_members`  (
 DROP TABLE IF EXISTS `ch_group_message`;
 CREATE TABLE `ch_group_message`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
+  `message_uuid` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '消息唯一UUID',
   `group_id` bigint NOT NULL,
   `sender_id` bigint UNSIGNED NOT NULL,
   `message` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
@@ -145,7 +147,7 @@ CREATE TABLE `ch_groups`  (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_ids`(`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_groups
@@ -219,7 +221,7 @@ CREATE TABLE `ch_relation_status`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_relation_status
@@ -253,7 +255,7 @@ CREATE TABLE `ch_user`  (
 -- ----------------------------
 -- Records of ch_user
 -- ----------------------------
-INSERT INTO `ch_user` VALUES (1100717328552689664, 'ambisiss', '$2a$10$a5IJ5v6lS9zJnvfLuJgsI.6dEBtzofqnweQ6wgHdXn5Yjxriki2Ki', NULL, NULL, NULL, NULL, NULL, '2023-04-26 09:37:42', NULL);
+INSERT INTO `ch_user` VALUES (1100717328552689664, 'ambisiss', '$2a$10$a5IJ5v6lS9zJnvfLuJgsI.6dEBtzofqnweQ6wgHdXn5Yjxriki2Ki', NULL, NULL, '13556787083', 'q799774821@163.com', NULL, '2023-04-26 09:37:42', '2023-05-01 22:27:27');
 
 -- ----------------------------
 -- Table structure for ch_user_friend

@@ -36,9 +36,8 @@ public class ChUserController {
 
     @PostMapping("/update")
     @ApiOperation(value = "修改用户信息")
-    public GlobalResult updateUserInfo(@RequestParam Long id,
-                                       @RequestBody @Validated ChUserInsertUpdateDto dto) {
-        int result = userService.updateUser(id, dto);
+    public GlobalResult updateUserInfo(@RequestBody @Validated ChUserInsertUpdateDto dto) {
+        int result = userService.updateUser(dto);
         return GlobalResult.success(result);
     }
 
@@ -49,7 +48,7 @@ public class ChUserController {
         return GlobalResult.success(result);
     }
 
-    @GetMapping("/info")
+    @GetMapping("/info/id")
     @ApiOperation(value = "根据ID查找用户信息")
     public GlobalResult getUserById(@RequestParam Long id) {
         ChUserVo result = userService.getUserById(id);
@@ -68,5 +67,19 @@ public class ChUserController {
     public GlobalResult userLogin(@RequestBody ChUserDto dto) {
         String token = userService.userLogin(dto);
         return GlobalResult.success(token);
+    }
+
+    @PostMapping("/logout")
+    @ApiOperation(value = "退出登录")
+    public GlobalResult userLogout(@RequestParam String token) {
+        int result = userService.userLogout(token);
+        return GlobalResult.success(result);
+    }
+
+    @GetMapping("/info/token")
+    @ApiOperation(value = "根据TOKEN查找用户信息")
+    public GlobalResult getUserByToken(@RequestParam String token) {
+        ChUserVo result = userService.getUserByToken(token);
+        return GlobalResult.success(result);
     }
 }

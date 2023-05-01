@@ -1,5 +1,7 @@
 package com.ambisiss.common.utils;
 
+import java.sql.Timestamp;
+
 /**
  * @Author: chenxiaoye
  * @Description:
@@ -9,7 +11,7 @@ public class SnowflakeIdGenerator {
     /**
      * 开始时间截
      */
-    private final long twepoch = 1420041600000L;
+    private long twepoch;
 
     /**
      * 机器id所占的位数
@@ -101,7 +103,7 @@ public class SnowflakeIdGenerator {
      * @return long
      */
     public synchronized long nextId() {
-
+        twepoch = new Timestamp(System.currentTimeMillis()).getTime();
         long timestamp = timeGen();
         timestamp = generateId(timestamp);
         return ((timestamp - twepoch) << timestampLeftShift) //
@@ -138,6 +140,7 @@ public class SnowflakeIdGenerator {
      * 获得下一个ID (string)
      **/
     public synchronized Long generateNextId() {
+        twepoch = new Timestamp(System.currentTimeMillis()).getTime();
         long timestamp = timeGen();
         timestamp = generateId(timestamp);
         //移位并通过或运算拼到一起组成64位的ID

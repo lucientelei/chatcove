@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/chat/chGroupMembers")
-@Api(tags = "ChGroupMembersController", description = "群组成员接口")
+@Api(tags = "群组成员接口", description = "ChGroupMembersController")
 public class ChGroupMembersController {
 
     @Autowired

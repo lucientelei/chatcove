@@ -3,6 +3,7 @@ package com.ambisiss.api.controller;
 import com.ambisiss.common.dto.ChGroupsInsertDto;
 import com.ambisiss.common.global.GlobalResult;
 import com.ambisiss.system.service.ChGroupsService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/chat/chGroups")
+@Api(tags = "群组管理接口", description = "ChGroupsController")
 public class ChGroupsController {
 
     @Autowired
