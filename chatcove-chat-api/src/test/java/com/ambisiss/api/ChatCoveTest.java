@@ -26,8 +26,8 @@ public class ChatCoveTest {
 
     @Test
     public void test(){
-        System.out.println(consumerProperties.getKeySerializer());
-        System.out.println(consumerProperties.getValueSerializer());
+        System.out.println(consumerProperties.getKeyDeserializer());
+        System.out.println(consumerProperties.getValueDeserializer());
     }
 
 }

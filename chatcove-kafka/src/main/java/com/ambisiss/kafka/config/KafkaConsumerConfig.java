@@ -12,7 +12,9 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.AbstractMessageListenerContainer;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.listener.ContainerProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,8 +42,8 @@ public class KafkaConsumerConfig {
         properties.put("enable.auto.commit", consumerProperties.getEnableAutoCommit());
         properties.put("auto.commit.interval.ms", consumerProperties.getAutoCommitInterval());
         properties.put("auto.offset.reset", consumerProperties.getAutoOffsetReset());
-        properties.put("key.deserializer", consumerProperties.getKeySerializer());
-        properties.put("value.deserializer", consumerProperties.getValueSerializer());
+        properties.put("key.deserializer", consumerProperties.getKeyDeserializer());
+        properties.put("value.deserializer", consumerProperties.getValueDeserializer());
         return properties;
     }
 
@@ -51,16 +53,15 @@ public class KafkaConsumerConfig {
 
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+        log.info("---------配置KafkaListener---------");
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.getContainerProperties().setPollTimeout(1500);
+        //开启批量监听
+        factory.setBatchListener(true);
+        //配置手动提交offset 手动调用Acknowledgment.acknowledge()后立即提交
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return factory;
     }
 
-    @Bean
-    public ConsumerListener consumerListener() {
-        return new ConsumerListener();
-    }
 }
-//org.apache.kafka.common.serialization.StringDeserializer
-//org.apache.kafka.common.serialization.StringSerializer

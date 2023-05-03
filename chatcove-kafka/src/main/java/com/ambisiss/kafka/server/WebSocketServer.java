@@ -2,7 +2,10 @@ package com.ambisiss.kafka.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ambisiss.common.utils.JwtUtils;
+import com.ambisiss.kafka.constant.KafkaConstant;
 import com.ambisiss.kafka.util.KafkaUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Description: userId:用户全局唯一ID
  * @Data: 2023-4-27 20:56:57
  */
+@Slf4j
 @Component
 @ServerEndpoint("/chat/{userId}")
 public class WebSocketServer {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-//    private static ApplicationContext applicationContext;
 
     @Autowired
     private KafkaTemplate kafkaTemplate;
@@ -64,7 +64,7 @@ public class WebSocketServer {
         this.userId = userId;
         this.session = session;
         websocketClients.put(userId, session);
-        logger.info("当前socket通道" + userId + "已加入连接！！！");
+        log.info("当前socket通道" + userId + "已加入连接！！！");
     }
 
     /**
@@ -76,7 +76,7 @@ public class WebSocketServer {
     @OnError
     public void onError(Session session, Throwable error) {
         error.printStackTrace();
-        logger.info("服务端发生了错误：" + error.getMessage());
+        log.info("服务端发生了错误：" + error.getMessage());
     }
 
     /**
@@ -87,7 +87,7 @@ public class WebSocketServer {
         if (websocketClients.containsKey(userId)) {
             websocketClients.remove(userId);
         }
-        logger.info("当前socket通道" + userId + "已退出连接！！！");
+        log.info("当前socket通道" + userId + "已退出连接！！！");
     }
 
     /**
@@ -99,14 +99,13 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         JSONObject jsonObject = JSONObject.parseObject(message);
-        System.out.println(jsonObject);
+        log.info(String.valueOf(jsonObject));
         if ("ping".equals(message)) {
             //心跳
             session.getBasicRemote().sendText("pong");
         } else {
             //TODO 调用Kafka进行消息分发
-            System.out.println("kafka发送消息");
-//            sendMessage(message, session);
+            sendMessage(message, session);
         }
     }
 
@@ -118,31 +117,38 @@ public class WebSocketServer {
      */
     public void sendMessage(String message, Session session) {
         if (!StringUtils.isEmpty(message)) {
-            JSONObject jsonObject = JSONObject.parseObject(message);
-            String senderId = jsonObject.getString("sender_id");
-            String receiverId = jsonObject.getString("receiver_id");
-
             //TODO 发送消息到kafka中
-//            KafkaUtil
+            JSONObject jsonObject = JSONObject.parseObject(message);
+            jsonObject.put("sessionId", session.getId());
+            String groupId = jsonObject.getString("groupId");
+            //私聊
+            if (StringUtils.isEmpty(groupId)) {
+                log.info(session.getId() + "kafka发送私聊消息");
+                KafkaUtil.sendSyncMsg(KafkaConstant.PERSONAL_TOPIC, String.valueOf(jsonObject));
+            } else {
+                //群聊
+                log.info(session.getId() + "kafka发送群聊消息");
+                KafkaUtil.sendSyncMsg(KafkaConstant.PERSONAL_TOPIC, String.valueOf(jsonObject));
+            }
         }
     }
 
     /**
-     * kafka发送消息监听事件
+     * 服务端返回信息给用户端
      *
      * @param message
      */
     public void kafkaReceiveMsg(String message) {
         JSONObject jsonObject = JSONObject.parseObject(message);
         //发送者ID
-        String senderId = jsonObject.getString("sender_id");
-        //接受者ID
-        String receiverId = jsonObject.getString("receiver_id");
-        if (websocketClients.get(receiverId) != null) {
-            Session session = websocketClients.get(receiverId);
+        String senderId = jsonObject.getString("senderId");
+        if (websocketClients.get(senderId) != null) {
+            Session session = websocketClients.get(senderId);
             //进行消息发送
             try {
-                session.getBasicRemote().sendText(message);
+                log.info("kafkaReceiveMsg 返回websocket:" + message);
+//                session.getBasicRemote().sendText(message);
+                session.getBasicRemote().sendText("kafkaReceiveMsg 返回websocket");
             } catch (IOException e) {
                 e.printStackTrace();
             }

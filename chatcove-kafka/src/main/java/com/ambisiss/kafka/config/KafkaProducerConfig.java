@@ -8,10 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.KafkaListenerConfigUtils;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,11 +32,11 @@ public class KafkaProducerConfig {
     @Autowired
     private KafkaProducerProperties producerProperties;
 
-
     public Map<String, Object> producerConfigs() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("bootstrap.servers", kafkaProperties.getBootstrapServers());
         properties.put("acks", producerProperties.getAcks());
+        properties.put("client.id", producerProperties.getClientId());
         properties.put("retries", producerProperties.getRetries());
         properties.put("batch.size", producerProperties.getBatchSize());
         properties.put("buffer.memory", producerProperties.getBufferMemory());

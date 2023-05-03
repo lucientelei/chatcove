@@ -78,8 +78,8 @@ spring:
       max-poll-records: 500
       auto-offset-reset: earliest
       # 指定消息key和消息体的编解码方式
-      key-serializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-serializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       #最大等待时间
       fetch-max-wait: 400
       #最小消费字节数
@@ -87,19 +87,23 @@ spring:
       #分组管理时心跳到消费者协调器之间的预计时间
       heartbeat-interval: 3000
       isolation-level: read_committed
-#    listener:
-#      # 当每一条记录被消费者监听器（ListenerConsumer）处理之后提交
-#      # RECORD
-#      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后提交
-#      # BATCH
-#      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后，距离上次提交时间大于TIME时提交
-#      # TIME
-#      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后，被处理record数量大于等于COUNT时提交
-#      # COUNT
-#      # TIME |　COUNT　有一个条件满足时提交
-#      # COUNT_TIME
-#      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后, 手动调用Acknowledgment.acknowledge()后提交
-#      # MANUAL
-#      # 手动调用Acknowledgment.acknowledge()后立即提交，一般使用这种
-#      # MANUAL_IMMEDIATE
-#      ack-mode: manual_immediate
+    listener:
+      ack-mode: manual
+      # 当每一条记录被消费者监听器（ListenerConsumer）处理之后提交
+      # RECORD
+      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后提交
+      # BATCH
+      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后，距离上次提交时间大于TIME时提交
+      # TIME
+      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后，被处理record数量大于等于COUNT时提交
+      # COUNT
+      # TIME |　COUNT　有一个条件满足时提交
+      # COUNT_TIME
+      # 当每一批poll()的数据被消费者监听器（ListenerConsumer）处理之后, 手动调用Acknowledgment.acknowledge()后提交
+      # MANUAL
+      # 手动调用Acknowledgment.acknowledge()后立即提交，一般使用这种
+      # MANUAL_IMMEDIATE
+
+#日志拓展配置
+logging:
+  file: classpath:logback-spring.xml

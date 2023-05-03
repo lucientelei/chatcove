@@ -30,7 +30,7 @@ public class ProducerCallback implements Callback {
         if (e != null) {
             log.error("kafka生产消息发送异常：" + e.getMessage());
         } else {
-            log.info("发送成功：" + msg);
+//            log.info("ProducerCallback-发送成功：\n" + msg);
         }
     }
 }

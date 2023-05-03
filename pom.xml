@@ -203,6 +203,12 @@
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${jackson-datatype-jsr310.version}</version>
             </dependency>
+            <!-- logging -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-logging</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
             <!--  热部署  -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

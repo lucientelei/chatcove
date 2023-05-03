@@ -16,6 +16,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.TopicPartition;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +71,7 @@ public class KafkaUtil {
             }
         }
         //节点资源不足，则扩充
-        KafkaProducerEntity kafkaProducerEntity = expansionProducer(100);
+        KafkaProducerEntity kafkaProducerEntity = expansionProducer(1);
         if (kafkaProducerEntity == null) {
             log.error("kafka获取生产者实例失败");
             return null;
@@ -125,9 +126,9 @@ public class KafkaUtil {
             // 生产者缓存内存的大小，以字节为单位.
             props.put("buffer.memory", "33554432");
             //消息key的编解码方式
-            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
             //消息value的编解码方式
-            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         } catch (Exception e) {
             log.error("系统未配置kafka相关参数：" + e.getCause());
             return null;

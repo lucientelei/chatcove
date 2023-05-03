@@ -40,12 +40,12 @@ public class KafkaConsumerProperties {
     /**
      * 指定消息key和消息体的编解码方式
      */
-    private String keySerializer;
+    private String keyDeserializer;
 
     /**
      * 指定消息key和消息体的编解码方式
      */
-    private String valueSerializer;
+    private String valueDeserializer;
 
     /**
      * 最大等待时间

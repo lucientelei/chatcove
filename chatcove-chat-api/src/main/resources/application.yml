@@ -41,3 +41,4 @@ jwt:
   secret: T1Bm7sLdHfRy6V8gjK4a
   # 签发者
   issuer: admin
+
