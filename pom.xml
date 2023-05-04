@@ -23,6 +23,7 @@
         <module>chatcove-common</module>
         <module>chatcove-security</module>
         <module>chatcove-kafka</module>
+        <module>chatcove-mongodb</module>
     </modules>
 
     <!--  版本号管理  -->
@@ -207,6 +208,12 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-logging</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+            <!-- mongodb -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-mongodb</artifactId>
                 <version>${springboot.version}</version>
             </dependency>
             <!--  热部署  -->

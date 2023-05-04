@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>chatcove-kafka</artifactId>
+    <artifactId>chatcove-mongodb</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -17,20 +17,10 @@
     </properties>
 
     <dependencies>
-        <!-- kafka -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-        <!-- websocket-->
+        <!-- mongodb -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ambisiss</groupId>
-            <artifactId>chatcove-mongodb</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <dependency>
             <groupId>com.ambisiss</groupId>

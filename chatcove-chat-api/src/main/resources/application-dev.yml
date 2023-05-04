@@ -103,6 +103,17 @@ spring:
       # MANUAL
       # 手动调用Acknowledgment.acknowledge()后立即提交，一般使用这种
       # MANUAL_IMMEDIATE
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      username: admin
+      password: Qq799774821
+      # 认证数据库
+      authenticationDatabase: admin
+      # 连接的数据库
+      database: chatcove
+
 
 #日志拓展配置
 logging:
