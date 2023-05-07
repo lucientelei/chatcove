@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/chatcove?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/chatcove?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai
     username: root
     password: root
     hikari:
@@ -107,12 +107,13 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      username: admin
-      password: Qq799774821
+      username: "admin"
+      password: "Qq799774821"
       # 认证数据库
       authenticationDatabase: admin
       # 连接的数据库
       database: chatcove
+      time-zone: Asia/Shanghai
 
 
 #日志拓展配置

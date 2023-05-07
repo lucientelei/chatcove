@@ -4,12 +4,13 @@ import com.ambisiss.kafka.properties.KafkaConsumerProperties;
 import com.ambisiss.kafka.properties.KafkaProducerProperties;
 import com.ambisiss.kafka.properties.KafkaProperties;
 import com.ambisiss.mongodb.entity.ChChatMessage;
-import com.ambisiss.mongodb.repository.ChChatMessageRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -34,6 +35,11 @@ public class ChatCoveTest {
     private MongoTemplate mongoTemplate;
 
     @Test
+    public void localTime(){
+        System.out.println(LocalDateTime.now());
+    }
+
+    @Test
     public void mongoSaveTest() {
         ChChatMessage chatMessage = new ChChatMessage();
         chatMessage.setSenderId(1L);
@@ -41,11 +47,16 @@ public class ChatCoveTest {
         chatMessage.setMessageUuid("12312312");
         chatMessage.setMessage("你好");
         chatMessage.setMessageTypeId(1L);
+        LocalDateTime now = LocalDateTime.now();
+        chatMessage.setCreateTime(now);
+        System.out.println(now);
         mongoTemplate.insert(chatMessage);
+        System.out.println(chatMessage.getId());
     }
 
     @Test
     public void mongoListTest() {
+        System.out.println("--------------------------------------查询");
         for (ChChatMessage item : mongoTemplate.findAll(ChChatMessage.class)) {
             System.out.println(item.toString());
         }

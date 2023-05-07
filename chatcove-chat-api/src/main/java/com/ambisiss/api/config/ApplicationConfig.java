@@ -24,16 +24,6 @@ import java.util.TimeZone;
 @EnableWebMvc
 public class ApplicationConfig {
 
-    /**
-     * 时区配置
-     *
-     * @return
-     */
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperCustomization() {
-        return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder.timeZone(TimeZone.getDefault());
-    }
-
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
         ObjectMapper mapper = new ObjectMapper();
