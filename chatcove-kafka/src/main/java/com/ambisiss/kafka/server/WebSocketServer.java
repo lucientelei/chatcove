@@ -3,8 +3,11 @@ package com.ambisiss.kafka.server;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ambisiss.common.utils.JwtUtils;
+import com.ambisiss.common.utils.MessageUUIDGenerator;
 import com.ambisiss.kafka.constant.KafkaConstant;
 import com.ambisiss.kafka.util.KafkaUtil;
+import com.ambisiss.mongodb.entity.ChChatMessage;
+import com.ambisiss.mongodb.service.ChChatMessageMongoService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +37,9 @@ public class WebSocketServer {
 
     @Autowired
     private KafkaTemplate kafkaTemplate;
+
+    @Autowired
+    private ChChatMessageMongoService messageMongoService;
 
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
@@ -105,7 +113,7 @@ public class WebSocketServer {
             session.getBasicRemote().sendText("pong");
         } else {
             //TODO 调用Kafka进行消息分发
-            sendMessage(message, session);
+            kafkaSendMessage(message, session);
         }
     }
 
@@ -115,7 +123,7 @@ public class WebSocketServer {
      * @param message
      * @param session
      */
-    public void sendMessage(String message, Session session) {
+    public void kafkaSendMessage(String message, Session session) {
         if (!StringUtils.isEmpty(message)) {
             //TODO 发送消息到kafka中
             JSONObject jsonObject = JSONObject.parseObject(message);
@@ -146,9 +154,7 @@ public class WebSocketServer {
             Session session = websocketClients.get(senderId);
             //进行消息发送
             try {
-                log.info("kafkaReceiveMsg 返回websocket:" + message);
-//                session.getBasicRemote().sendText(message);
-                session.getBasicRemote().sendText("kafkaReceiveMsg 返回websocket");
+                session.getBasicRemote().sendText("kafkaReceiveMsg 返回消息给websocket：kafka消息已消费 mongodb消息已经存储");
             } catch (IOException e) {
                 e.printStackTrace();
             }

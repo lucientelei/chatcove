@@ -10,8 +10,10 @@ import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -35,7 +37,7 @@ public class ChatCoveTest {
     private MongoTemplate mongoTemplate;
 
     @Test
-    public void localTime(){
+    public void localTime() {
         System.out.println(LocalDateTime.now());
     }
 

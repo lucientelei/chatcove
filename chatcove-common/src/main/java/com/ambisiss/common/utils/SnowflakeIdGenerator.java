@@ -1,6 +1,7 @@
 package com.ambisiss.common.utils;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Author: chenxiaoye
@@ -174,4 +175,10 @@ public class SnowflakeIdGenerator {
         return System.currentTimeMillis();
     }
 
+    public static void main(String[] args) {
+        SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0, 0);
+        System.out.println(generator.nextId());
+        System.out.println(generator.nextId());
+        System.out.println(generator.nextId());
+    }
 }
