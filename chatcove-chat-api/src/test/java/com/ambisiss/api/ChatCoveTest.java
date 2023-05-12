@@ -3,18 +3,14 @@ package com.ambisiss.api;
 import com.ambisiss.kafka.properties.KafkaConsumerProperties;
 import com.ambisiss.kafka.properties.KafkaProducerProperties;
 import com.ambisiss.kafka.properties.KafkaProperties;
-import com.ambisiss.mongodb.entity.ChChatMessage;
+import com.ambisiss.mongodb.entity.ChChatMessageMongo;
+import com.github.yitter.idgen.YitIdHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 /**
  * @Author: chenxiaoye
@@ -43,7 +39,7 @@ public class ChatCoveTest {
 
     @Test
     public void mongoSaveTest() {
-        ChChatMessage chatMessage = new ChChatMessage();
+        ChChatMessageMongo chatMessage = new ChChatMessageMongo();
         chatMessage.setSenderId(1L);
         chatMessage.setReceiverId(2L);
         chatMessage.setMessageUuid("12312312");
@@ -59,15 +55,16 @@ public class ChatCoveTest {
     @Test
     public void mongoListTest() {
         System.out.println("--------------------------------------查询");
-        for (ChChatMessage item : mongoTemplate.findAll(ChChatMessage.class)) {
+        for (ChChatMessageMongo item : mongoTemplate.findAll(ChChatMessageMongo.class)) {
             System.out.println(item.toString());
         }
     }
 
     @Test
     public void test() {
-        System.out.println(consumerProperties.getKeyDeserializer());
-        System.out.println(consumerProperties.getValueDeserializer());
+        System.out.println(YitIdHelper.nextId());
+        System.out.println(YitIdHelper.nextId());
+        System.out.println(YitIdHelper.nextId());
+        System.out.println(YitIdHelper.nextId());
     }
-
 }

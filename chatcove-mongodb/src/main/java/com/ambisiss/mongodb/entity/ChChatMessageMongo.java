@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Document("ch_chat_message")
-public class ChChatMessage {
+public class ChChatMessageMongo {
 
     @Id
     private String id;
@@ -37,17 +37,22 @@ public class ChChatMessage {
     @Field("messageType_id")
     private Long messageTypeId;
 
+    @Field("read")
+    private boolean read;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @Override
     public String toString() {
-        return "ChChatMessage{" +
-                "messageUuid='" + messageUuid + '\'' +
+        return "ChChatMessageMongo{" +
+                "id='" + id + '\'' +
+                ", messageUuid='" + messageUuid + '\'' +
                 ", senderId=" + senderId +
                 ", receiverId=" + receiverId +
                 ", message='" + message + '\'' +
                 ", messageTypeId=" + messageTypeId +
+                ", read=" + read +
                 ", createTime=" + createTime +
                 '}';
     }

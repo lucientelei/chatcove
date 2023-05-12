@@ -13,6 +13,7 @@ import com.ambisiss.system.mapper.ChUserDao;
 import com.ambisiss.system.service.ChUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yitter.idgen.YitIdHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,9 +53,8 @@ public class ChUserServiceImpl extends ServiceImpl<ChUserDao, ChUser> implements
             return -1;
         }
         BeanUtils.copyProperties(dto, user);
-        //设置ID
-        SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0L, 0L);
-        user.setId(generator.generateNextId());
+        //TODO 设置ID YitIdHelper
+        user.setId(YitIdHelper.nextId());
         //设置密码
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodePassword = passwordEncoder.encode(dto.getPassword());

@@ -19,13 +19,13 @@ import java.util.TimeZone;
  * @Data: 2023-4-20 20:49:45
  */
 @Configuration
-@MapperScan(basePackages = "com.ambisiss.system.mapper")
+@MapperScan(basePackages = {"com.ambisiss.system.mapper"})
 @ComponentScan(basePackages = {"com.ambisiss.*"})
 @EnableWebMvc
 public class ApplicationConfig {
 
     @Bean
-    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

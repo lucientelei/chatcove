@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 02/05/2023 00:10:18
+ Date: 12/05/2023 23:22:08
 */
 
 SET NAMES utf8mb4;
@@ -255,7 +255,8 @@ CREATE TABLE `ch_user`  (
 -- ----------------------------
 -- Records of ch_user
 -- ----------------------------
-INSERT INTO `ch_user` VALUES (1100717328552689664, 'ambisiss', '$2a$10$a5IJ5v6lS9zJnvfLuJgsI.6dEBtzofqnweQ6wgHdXn5Yjxriki2Ki', NULL, NULL, '13556787083', 'q799774821@163.com', NULL, '2023-04-26 09:37:42', '2023-05-01 22:27:27');
+INSERT INTO `ch_user` VALUES (426809250224799813, 'ambisiss', '$2a$10$OgzwXUyRX.3enbKVt9z0IuPuyB/hYqL1fiqjzde/rX7XffOmQtqRW', '1', NULL, '13556787083', 'q799774821@163.com', NULL, '2023-05-12 20:47:37', NULL);
+INSERT INTO `ch_user` VALUES (426809436573532229, 'lucienxxx', '$2a$10$bEZcfVhfal2OkMBV2beQWOksraz/G1yTN73kFWxTKLFMcY8Xe4Y2i', NULL, NULL, NULL, NULL, NULL, '2023-05-12 20:48:22', NULL);
 
 -- ----------------------------
 -- Table structure for ch_user_friend

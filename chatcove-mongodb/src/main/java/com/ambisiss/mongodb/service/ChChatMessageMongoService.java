@@ -1,6 +1,6 @@
 package com.ambisiss.mongodb.service;
 
-import com.ambisiss.mongodb.entity.ChChatMessage;
+import com.ambisiss.mongodb.entity.ChChatMessageMongo;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ public interface ChChatMessageMongoService {
      * @param chatMessage
      * @return
      */
-    int insertMessage(ChChatMessage chatMessage);
+    int insertMessage(ChChatMessageMongo chatMessage);
 
     /**
      * 查看全部消息
      * @return
      */
-    List<ChChatMessage> listAll();
+    List<ChChatMessageMongo> listAll();
 
     /**
      * 删除指定消息
@@ -30,4 +30,11 @@ public interface ChChatMessageMongoService {
      * @return
      */
     int delMessage(String messageUuid);
+
+    /**
+     * 更新集合字段
+     * @param chatMessageMongo
+     * @return
+     */
+    int updateRead(ChChatMessageMongo chatMessageMongo);
 }

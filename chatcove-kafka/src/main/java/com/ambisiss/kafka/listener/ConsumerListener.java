@@ -4,10 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.ambisiss.common.utils.MessageUUIDGenerator;
 import com.ambisiss.kafka.constant.KafkaConstant;
 import com.ambisiss.kafka.server.WebSocketServer;
-import com.ambisiss.mongodb.entity.ChChatMessage;
+import com.ambisiss.mongodb.entity.ChChatMessageMongo;
 import com.ambisiss.mongodb.service.ChChatMessageMongoService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
@@ -30,36 +29,38 @@ public class ConsumerListener {
     /**
      * 群组消息监听
      *
-     * @param record
+     * @param message
      */
     @KafkaListener(topics = KafkaConstant.GROUP_TOPIC)
-    public void listenGroup(String record, Acknowledgment ack) {
-        log.info(KafkaConstant.GROUP_TOPIC + "发送聊天消息监听" + record);
+    public void listenGroup(String message, Acknowledgment ack) {
+        log.info(KafkaConstant.GROUP_TOPIC + "发送聊天消息监听" + message);
         //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
         ack.acknowledge();
-        WebSocketServer socketServer = new WebSocketServer();
-        socketServer.kafkaReceiveMsg(record);
+//        WebSocketServer socketServer = new WebSocketServer();
+//        socketServer.kafkaReceiveMsg(message);
         //TODO 群聊缓存消息
-//        JSON.parseObject(record, ChChatMessage.class);
+//        JSON.parseObject(message, ChChatMessage.class);
 //        messageMongoService.insertMessage(chChatMessage);
     }
 
     /**
      * 私聊消息监听
      *
-     * @param record
+     * @param message
      */
     @KafkaListener(topics = KafkaConstant.PERSONAL_TOPIC)
-    public void listenPersonal(String record, Acknowledgment ack) {
-        log.info(KafkaConstant.PERSONAL_TOPIC + "发送聊天消息监听" + record);
+    public void listenPersonal(String message, Acknowledgment ack) {
+        log.info(KafkaConstant.PERSONAL_TOPIC + "发送聊天消息监听" + message);
         //TODO 缓存私聊信息
-        ChChatMessage chChatMessage = JSON.parseObject(record, ChChatMessage.class);
-        chChatMessage.setMessageUuid(MessageUUIDGenerator.generateUUID());
-        chChatMessage.setCreateTime(LocalDateTime.now());
-        messageMongoService.insertMessage(chChatMessage);
+        ChChatMessageMongo chChatMessageMongo = JSON.parseObject(message, ChChatMessageMongo.class);
+        chChatMessageMongo.setRead(false);
+        chChatMessageMongo.setMessageUuid(MessageUUIDGenerator.generateUUID());
+        chChatMessageMongo.setCreateTime(LocalDateTime.now());
+        messageMongoService.insertMessage(chChatMessageMongo);
+        log.info("-----返回websocket前：" + chChatMessageMongo.toString());
         //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
         WebSocketServer socketServer = new WebSocketServer();
-        socketServer.kafkaReceiveMsg(record);
+        socketServer.kafkaPersonalReceiveMsg(chChatMessageMongo);
         ack.acknowledge();
     }
 }

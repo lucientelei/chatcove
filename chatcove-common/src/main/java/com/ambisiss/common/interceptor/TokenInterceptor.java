@@ -40,7 +40,6 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Autowired
     private RedisUtil redisUtil;
 
-
     /**
      * 前置拦截
      *
@@ -57,7 +56,8 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         //servlet请求响应转换
         String token = request.getHeader("Authorization");
-        if (StringUtils.isEmpty(token)) {
+        String cacheObject = redisUtil.getCacheObject(RedisConstant.USER_TOKEN_PREFIX + token);
+        if (StringUtils.isEmpty(token) || StringUtils.isEmpty(cacheObject)) {
             response.setStatus(HttpStatus.UNAUTHORIZED);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(JSON.toJSONString(GlobalResult.error(HttpStatus.UNAUTHORIZED, "未登录")));

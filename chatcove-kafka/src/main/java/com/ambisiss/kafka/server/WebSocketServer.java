@@ -2,26 +2,20 @@ package com.ambisiss.kafka.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.ambisiss.common.utils.JwtUtils;
-import com.ambisiss.common.utils.MessageUUIDGenerator;
 import com.ambisiss.kafka.constant.KafkaConstant;
 import com.ambisiss.kafka.util.KafkaUtil;
-import com.ambisiss.mongodb.entity.ChChatMessage;
+import com.ambisiss.mongodb.entity.ChChatMessageMongo;
 import com.ambisiss.mongodb.service.ChChatMessageMongoService;
+import com.ambisiss.mongodb.service.impl.ChChatMessageMongoServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,10 +30,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketServer {
 
     @Autowired
-    private KafkaTemplate kafkaTemplate;
-
-    @Autowired
     private ChChatMessageMongoService messageMongoService;
+
+    public WebSocketServer(){
+        this.messageMongoService = new ChChatMessageMongoServiceImpl();
+    }
 
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
@@ -107,7 +102,6 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         JSONObject jsonObject = JSONObject.parseObject(message);
-        log.info(String.valueOf(jsonObject));
         if ("ping".equals(message)) {
             //心跳
             session.getBasicRemote().sendText("pong");
@@ -127,15 +121,14 @@ public class WebSocketServer {
         if (!StringUtils.isEmpty(message)) {
             //TODO 发送消息到kafka中
             JSONObject jsonObject = JSONObject.parseObject(message);
-            jsonObject.put("sessionId", session.getId());
             String groupId = jsonObject.getString("groupId");
             //私聊
             if (StringUtils.isEmpty(groupId)) {
-                log.info(session.getId() + "kafka发送私聊消息");
+                log.info(userId + ":kafka发送私聊消息");
                 KafkaUtil.sendSyncMsg(KafkaConstant.PERSONAL_TOPIC, String.valueOf(jsonObject));
             } else {
                 //群聊
-                log.info(session.getId() + "kafka发送群聊消息");
+                log.info(userId + ":kafka发送群聊消息");
                 KafkaUtil.sendSyncMsg(KafkaConstant.PERSONAL_TOPIC, String.valueOf(jsonObject));
             }
         }
@@ -144,17 +137,20 @@ public class WebSocketServer {
     /**
      * 服务端返回信息给用户端
      *
-     * @param message
+     * @param chatMessageMongo
      */
-    public void kafkaReceiveMsg(String message) {
-        JSONObject jsonObject = JSONObject.parseObject(message);
-        //发送者ID
-        String senderId = jsonObject.getString("senderId");
-        if (websocketClients.get(senderId) != null) {
-            Session session = websocketClients.get(senderId);
+    public void kafkaPersonalReceiveMsg(ChChatMessageMongo chatMessageMongo) {
+        String receiverId = String.valueOf(chatMessageMongo.getReceiverId());
+        if (websocketClients.get(receiverId) != null) {
+            Session session = websocketClients.get(receiverId);
             //进行消息发送
             try {
-                session.getBasicRemote().sendText("kafkaReceiveMsg 返回消息给websocket：kafka消息已消费 mongodb消息已经存储");
+                session.getBasicRemote().sendText(chatMessageMongo.toString());
+                //TODO 更新mongodb已读状态
+                chatMessageMongo.setRead(true);
+                log.info("-------session上线接收后：" + chatMessageMongo.toString());
+                //mongodbtemplate为空
+                messageMongoService.updateRead(chatMessageMongo);
             } catch (IOException e) {
                 e.printStackTrace();
             }

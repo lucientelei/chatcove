@@ -1,7 +1,7 @@
 package com.ambisiss.api.controller.mongodb;
 
 import com.ambisiss.common.global.GlobalResult;
-import com.ambisiss.mongodb.entity.ChChatMessage;
+import com.ambisiss.mongodb.entity.ChChatMessageMongo;
 import com.ambisiss.mongodb.service.ChChatMessageMongoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +28,7 @@ public class ChChatMessageMongoDbController {
     @GetMapping("/listAll")
     @ApiOperation(value = "获取全部数据")
     public GlobalResult listAll(){
-        List<ChChatMessage> result = messageMongoService.listAll();
+        List<ChChatMessageMongo> result = messageMongoService.listAll();
         return GlobalResult.success(result);
     }
 

@@ -1,5 +1,7 @@
 package com.ambisiss.common.utils;
 
+import cn.hutool.core.lang.Singleton;
+
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -9,176 +11,70 @@ import java.util.Date;
  * @Data: 2023-4-20 21:42:33
  */
 public class SnowflakeIdGenerator {
-    /**
-     * 开始时间截
-     */
-    private long twepoch;
-
-    /**
-     * 机器id所占的位数
-     */
-    private final long workerIdBits = 5L;
-
-    /**
-     * 数据标识id所占的位数
-     */
-    private final long datacenterIdBits = 5L;
-
-    /**
-     * 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
-     */
-    private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
-
-    /**
-     * 支持的最大数据标识id，结果是31
-     */
-    private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
-
-    /**
-     * 序列在id中占的位数
-     */
-    private final long sequenceBits = 12L;
-
-    /**
-     * 机器ID向左移12位
-     */
-    private final long workerIdShift = sequenceBits;
-
-    /**
-     * 数据标识id向左移17位(12+5)
-     */
-    private final long datacenterIdShift = sequenceBits + workerIdBits;
-
-    /**
-     * 时间截向左移22位(5+5+12)
-     */
-    private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
-
-    /**
-     * 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095)
-     */
-    private final long sequenceMask = -1L ^ (-1L << sequenceBits);
-
-    /**
-     * 工作机器ID(0~31)
-     */
-    private long workerId;
-
-    /**
-     * 数据中心ID(0~31)
-     */
+    private static final long START_STMP = System.currentTimeMillis();
+    private static final long SEQUENCE_BIT = 9L;
+    private static final long MACHINE_BIT = 2L;
+    private static final long DATACENTER_BIT = 2L;
+    private static final long MAX_SEQUENCE = 511L;
+    private static final long MAX_MACHINE_NUM = 3L;
+    private static final long MAX_DATACENTER_NUM = 3L;
+    private static final long MACHINE_LEFT = 9L;
+    private static final long DATACENTER_LEFT = 11L;
+    private static final long TIMESTMP_LEFT = 13L;
     private long datacenterId;
-
-    /**
-     * 毫秒内序列(0~4095)
-     */
+    private long machineId;
     private long sequence = 0L;
+    private long lastStmp = -1L;
 
-    /**
-     * 上次生成ID的时间截
-     */
-    private long lastTimestamp = -1L;
-
-
-    /**
-     * 构造函数
-     *
-     * @param workerId     工作ID (0~31)
-     * @param datacenterId 数据中心ID (0~31)
-     */
-    public SnowflakeIdGenerator(long workerId, long datacenterId) {
-        if (workerId > maxWorkerId || workerId < 0) {
-            throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
-        }
-        if (datacenterId > maxDatacenterId || datacenterId < 0) {
-            throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
-        }
-        this.workerId = workerId;
-        this.datacenterId = datacenterId;
-    }
-
-
-    /**
-     * 获得下一个ID (该方法是线程安全的)
-     *
-     * @return long
-     */
-    public synchronized long nextId() {
-        twepoch = new Timestamp(System.currentTimeMillis()).getTime();
-        long timestamp = timeGen();
-        timestamp = generateId(timestamp);
-        return ((timestamp - twepoch) << timestampLeftShift) //
-                | (datacenterId << datacenterIdShift) //
-                | (workerId << workerIdShift) //
-                | sequence;
-    }
-
-    private long generateId(long timestamp) {
-        //如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
-        if (timestamp < lastTimestamp) {
-            throw new RuntimeException(
-                    String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
-        }
-        //如果是同一时间生成的，则进行毫秒内序列
-        if (lastTimestamp == timestamp) {
-            sequence = (sequence + 1) & sequenceMask;
-            //毫秒内序列溢出
-            if (sequence == 0)
-            //阻塞到下一个毫秒,获得新的时间戳
-            {
-                timestamp = tilNextMillis(lastTimestamp);
+    public SnowflakeIdGenerator(long datacenterId, long machineId) {
+        if (datacenterId <= 3L && datacenterId >= 0L) {
+            if (machineId <= 3L && machineId >= 0L) {
+                this.datacenterId = datacenterId;
+                this.machineId = machineId;
+            } else {
+                throw new IllegalArgumentException("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
             }
-        } else//时间戳改变，毫秒内序列重置
-        {
-            sequence = 0L;
+        } else {
+            throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
         }
-        //上次生成ID的时间截
-        lastTimestamp = timestamp;
-        return timestamp;
     }
 
-    /**
-     * 获得下一个ID (string)
-     **/
-    public synchronized Long generateNextId() {
-        twepoch = new Timestamp(System.currentTimeMillis()).getTime();
-        long timestamp = timeGen();
-        timestamp = generateId(timestamp);
-        //移位并通过或运算拼到一起组成64位的ID
-        return Long.valueOf(((timestamp - twepoch) << timestampLeftShift)
-                | (datacenterId << datacenterIdShift)
-                | (workerId << workerIdShift)
-                | sequence);
-    }
+    public synchronized long nextId() {
+        long currStmp = this.getNewstmp();
+        if (currStmp < this.lastStmp) {
+            throw new RuntimeException("Clock moved backwards.  Refusing to generate id");
+        } else {
+            if (currStmp == this.lastStmp) {
+                this.sequence = this.sequence + 1L & 511L;
+                if (this.sequence == 0L) {
+                    currStmp = this.getNextMill();
+                }
+            } else {
+                this.sequence = 0L;
+            }
 
-
-    /**
-     * 阻塞到下一个毫秒，直到获得新的时间戳
-     *
-     * @param lastTimestamp 上次生成ID的时间截
-     * @return 当前时间戳
-     */
-    protected long tilNextMillis(long lastTimestamp) {
-        long timestamp = timeGen();
-        while (timestamp <= lastTimestamp) {
-            timestamp = timeGen();
+            this.lastStmp = currStmp;
+            return currStmp - getNewstmp() << 13 | this.datacenterId << 11 | this.machineId << 9 | this.sequence;
         }
-        return timestamp;
     }
 
-    /**
-     * 返回以毫秒为单位的当前时间
-     *
-     * @return 当前时间(毫秒)
-     */
-    protected long timeGen() {
+    private long getNextMill() {
+        long mill;
+        for (mill = this.getNewstmp(); mill <= this.lastStmp; mill = this.getNewstmp()) {
+        }
+        return mill;
+    }
+
+    private long getNewstmp() {
         return System.currentTimeMillis();
     }
 
+    public static Long getDefaultSnowFlakeId() {
+        return ((SnowflakeIdGenerator) Singleton.get(SnowflakeIdGenerator.class, new Object[]{1L, 1L})).nextId();
+    }
+
     public static void main(String[] args) {
-        SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0, 0);
-        System.out.println(generator.nextId());
-        System.out.println(generator.nextId());
-        System.out.println(generator.nextId());
+        System.out.println(getDefaultSnowFlakeId());
+
     }
 }

@@ -22,11 +22,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <!--mybatis-plus-->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
+
         <!--mybatis-plus代码生成器-->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -49,11 +45,5 @@
             <artifactId>chatcove-security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <!-- 通用依赖 -->
-<!--        <dependency>-->
-<!--            <groupId>com.ambisiss</groupId>-->
-<!--            <artifactId>chatcove-common</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
     </dependencies>
 </project>

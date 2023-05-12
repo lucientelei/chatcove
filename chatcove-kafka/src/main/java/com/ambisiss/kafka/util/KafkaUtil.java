@@ -71,7 +71,7 @@ public class KafkaUtil {
             }
         }
         //节点资源不足，则扩充
-        KafkaProducerEntity kafkaProducerEntity = expansionProducer(1);
+        KafkaProducerEntity kafkaProducerEntity = expansionProducer(10);
         if (kafkaProducerEntity == null) {
             log.error("kafka获取生产者实例失败");
             return null;
