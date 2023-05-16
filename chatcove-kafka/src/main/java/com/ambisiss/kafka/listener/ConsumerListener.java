@@ -8,6 +8,7 @@ import com.ambisiss.mongodb.entity.ChChatMessageMongo;
 import com.ambisiss.mongodb.service.ChChatMessageMongoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
@@ -20,10 +21,11 @@ import java.time.LocalDateTime;
  * @Data: 2023-5-1 17:33:13
  */
 @Slf4j
-@Component
+@Component("ConsumerListener")
 public class ConsumerListener {
 
     @Autowired
+//    @Qualifier(value = "messageMongoService")
     private ChChatMessageMongoService messageMongoService;
 
     /**
@@ -57,9 +59,10 @@ public class ConsumerListener {
         chChatMessageMongo.setMessageUuid(MessageUUIDGenerator.generateUUID());
         chChatMessageMongo.setCreateTime(LocalDateTime.now());
         messageMongoService.insertMessage(chChatMessageMongo);
-        log.info("-----返回websocket前：" + chChatMessageMongo.toString());
+//        log.info("-----返回websocket前：" + chChatMessageMongo.toString());
         //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
-        WebSocketServer socketServer = new WebSocketServer();
+        WebSocketServer socketServer =new WebSocketServer();
+//        WebSocketServer.kafkaPersonalReceiveMsg(chChatMessageMongo);
         socketServer.kafkaPersonalReceiveMsg(chChatMessageMongo);
         ack.acknowledge();
     }

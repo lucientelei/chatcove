@@ -9,9 +9,11 @@ import com.ambisiss.mongodb.service.ChChatMessageMongoService;
 import com.ambisiss.mongodb.service.impl.ChChatMessageMongoServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -25,16 +27,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Data: 2023-4-27 20:56:57
  */
 @Slf4j
-@Component
+@Component("WebSocketServer")
 @ServerEndpoint("/chat/{userId}")
 public class WebSocketServer {
 
     @Autowired
     private ChChatMessageMongoService messageMongoService;
-
-    public WebSocketServer(){
-        this.messageMongoService = new ChChatMessageMongoServiceImpl();
-    }
 
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
@@ -67,6 +65,7 @@ public class WebSocketServer {
         this.userId = userId;
         this.session = session;
         websocketClients.put(userId, session);
+        onlineCount++;
         log.info("当前socket通道" + userId + "已加入连接！！！");
     }
 
@@ -90,6 +89,7 @@ public class WebSocketServer {
         if (websocketClients.containsKey(userId)) {
             websocketClients.remove(userId);
         }
+        onlineCount--;
         log.info("当前socket通道" + userId + "已退出连接！！！");
     }
 
@@ -141,6 +141,8 @@ public class WebSocketServer {
      */
     public void kafkaPersonalReceiveMsg(ChChatMessageMongo chatMessageMongo) {
         String receiverId = String.valueOf(chatMessageMongo.getReceiverId());
+        //mongodbtemplate为空
+        log.info("messageMongoService---" + StringUtils.isEmpty(messageMongoService));
         if (websocketClients.get(receiverId) != null) {
             Session session = websocketClients.get(receiverId);
             //进行消息发送
@@ -149,8 +151,8 @@ public class WebSocketServer {
                 //TODO 更新mongodb已读状态
                 chatMessageMongo.setRead(true);
                 log.info("-------session上线接收后：" + chatMessageMongo.toString());
-                //mongodbtemplate为空
-                messageMongoService.updateRead(chatMessageMongo);
+
+//                messageMongoService.updateRead(chatMessageMongo.getMessageUuid(), 1);
             } catch (IOException e) {
                 e.printStackTrace();
             }

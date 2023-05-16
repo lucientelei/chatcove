@@ -17,7 +17,7 @@ mybatis-plus:
   # 搜索指定包别名
   typeAliasesPackage: com.ambisiss.**.entity
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
-  mapperLocations: classpath*:mapper/system/*Mapper.xml
+  mapperLocations: classpath*:mapper/*Mapper.xml
   # 配置控制台打印完整带参数SQL语句
   configuration:
     logImpl: org.apache.ibatis.logging.stdout.StdOutImpl

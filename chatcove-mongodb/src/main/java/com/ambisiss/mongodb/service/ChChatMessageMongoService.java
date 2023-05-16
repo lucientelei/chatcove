@@ -1,6 +1,7 @@
 package com.ambisiss.mongodb.service;
 
 import com.ambisiss.mongodb.entity.ChChatMessageMongo;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
@@ -32,9 +33,10 @@ public interface ChChatMessageMongoService {
     int delMessage(String messageUuid);
 
     /**
-     * 更新集合字段
-     * @param chatMessageMongo
+     * 更新已读状态
+     * @param messageUuid
+     * @param isRead
      * @return
      */
-    int updateRead(ChChatMessageMongo chatMessageMongo);
+    int updateRead(String messageUuid, int isRead);
 }

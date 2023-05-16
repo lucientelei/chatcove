@@ -22,6 +22,7 @@
 //    @PostConstruct
 //    public void setMongoTemplateTimezone() {
 //        TimeZone timeZone = TimeZone.getTimeZone("Asia/Shanghai");
-//        mongoTemplate.getConverter().getMappingContext()(Date.class, new DateToDateConverter(timeZone));
+//        mongoTemplate.getConverter().getMappingContext();
+//
 //    }
 //}

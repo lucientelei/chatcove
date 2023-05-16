@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -51,9 +52,9 @@ public class ChChatMessageMongoServiceImpl implements ChChatMessageMongoService 
     }
 
     @Override
-    public int updateRead(ChChatMessageMongo chatMessageMongo) {
-        Query query = new Query().addCriteria(Criteria.where("message_uuid").is(chatMessageMongo.getMessageUuid()));
-        Update update = new Update().set("read", chatMessageMongo.isRead());
+    public int updateRead(String messageUuid, int isRead) {
+        Query query = new Query().addCriteria(Criteria.where("message_uuid").is(messageUuid));
+        Update update = new Update().set("read", isRead == 1);
         UpdateResult result = mongoTemplate.upsert(query, update, ChChatMessageMongo.class);
         return (int) result.getModifiedCount();
     }

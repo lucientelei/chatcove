@@ -4,6 +4,7 @@ import com.ambisiss.kafka.properties.KafkaConsumerProperties;
 import com.ambisiss.kafka.properties.KafkaProducerProperties;
 import com.ambisiss.kafka.properties.KafkaProperties;
 import com.ambisiss.mongodb.entity.ChChatMessageMongo;
+import com.ambisiss.mongodb.service.ChChatMessageMongoService;
 import com.github.yitter.idgen.YitIdHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author: chenxiaoye
@@ -31,6 +33,16 @@ public class ChatCoveTest {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ChChatMessageMongoService messageMongoService;
+
+    @Test
+    void testMongo() {
+//        List<ChChatMessageMongo> mongoList = messageMongoService.listAll();
+//        mongoList.forEach(System.out::println);
+        System.out.println(messageMongoService.updateRead("1b4d22edf16c4af8b550b4e159924005", 1));
+    }
 
     @Test
     public void localTime() {
