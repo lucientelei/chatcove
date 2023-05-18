@@ -31,9 +31,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/chat/{userId}")
 public class WebSocketServer {
 
-    @Autowired
-    private ChChatMessageMongoService messageMongoService;
+    private static ChChatMessageMongoService messageMongoService;
 
+    @Autowired
+    public void setMessageMongoService(ChChatMessageMongoService messageMongoService){
+        WebSocketServer.messageMongoService = messageMongoService;
+    }
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
      */
@@ -141,8 +144,6 @@ public class WebSocketServer {
      */
     public void kafkaPersonalReceiveMsg(ChChatMessageMongo chatMessageMongo) {
         String receiverId = String.valueOf(chatMessageMongo.getReceiverId());
-        //mongodbtemplate为空
-        log.info("messageMongoService---" + StringUtils.isEmpty(messageMongoService));
         if (websocketClients.get(receiverId) != null) {
             Session session = websocketClients.get(receiverId);
             //进行消息发送
@@ -151,8 +152,7 @@ public class WebSocketServer {
                 //TODO 更新mongodb已读状态
                 chatMessageMongo.setRead(true);
                 log.info("-------session上线接收后：" + chatMessageMongo.toString());
-
-//                messageMongoService.updateRead(chatMessageMongo.getMessageUuid(), 1);
+                messageMongoService.updateRead(chatMessageMongo.getMessageUuid(), 1);
             } catch (IOException e) {
                 e.printStackTrace();
             }

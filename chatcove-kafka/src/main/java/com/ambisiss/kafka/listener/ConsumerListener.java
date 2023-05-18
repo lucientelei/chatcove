@@ -59,10 +59,8 @@ public class ConsumerListener {
         chChatMessageMongo.setMessageUuid(MessageUUIDGenerator.generateUUID());
         chChatMessageMongo.setCreateTime(LocalDateTime.now());
         messageMongoService.insertMessage(chChatMessageMongo);
-//        log.info("-----返回websocket前：" + chChatMessageMongo.toString());
         //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
         WebSocketServer socketServer =new WebSocketServer();
-//        WebSocketServer.kafkaPersonalReceiveMsg(chChatMessageMongo);
         socketServer.kafkaPersonalReceiveMsg(chChatMessageMongo);
         ack.acknowledge();
     }
