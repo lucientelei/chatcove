@@ -54,8 +54,17 @@ public class ChChatMessageMongoServiceImpl implements ChChatMessageMongoService 
     @Override
     public int updateRead(String messageUuid, int isRead) {
         Query query = new Query().addCriteria(Criteria.where("message_uuid").is(messageUuid));
-        Update update = new Update().set("read", isRead == 1);
+        Update update = new Update().set("read", isRead);
         UpdateResult result = mongoTemplate.upsert(query, update, ChChatMessageMongo.class);
         return (int) result.getModifiedCount();
+    }
+
+    @Override
+    public List<ChChatMessageMongo> listUnReadMsg(Long userId) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("user_id").is(userId)
+                .and("read").is(0);
+        query.addCriteria(criteria);
+        return mongoTemplate.find(query, ChChatMessageMongo.class);
     }
 }

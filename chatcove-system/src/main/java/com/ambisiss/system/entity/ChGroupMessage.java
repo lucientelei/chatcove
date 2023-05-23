@@ -7,8 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -21,7 +19,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author chenxiaoye
- * @since 2023-05-01
+ * @since 2023-05-23
  */
 @Getter
 @Setter
@@ -44,9 +42,8 @@ public class ChGroupMessage implements Serializable {
 
     private String message;
 
-    private Long messageType;
+    private Long messageTypeId;
 
     @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 }

@@ -35,9 +35,6 @@ import java.lang.reflect.Method;
 public class TokenInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private JwtUtils jwtUtil;
-
-    @Autowired
     private RedisUtil redisUtil;
 
     /**

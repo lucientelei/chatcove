@@ -5,10 +5,8 @@ import com.ambisiss.common.constant.ScheduleConstants;
 import com.ambisiss.common.exception.TaskException;
 import com.ambisiss.common.utils.SpringUtils;
 import com.ambisiss.common.utils.StringUtils;
-import com.ambisiss.quartz.pojo.QuartzJob;
+import com.ambisiss.quartz.entity.QuartzJob;
 import org.quartz.*;
-
-import java.util.logging.ConsoleHandler;
 
 /**
  * @Author: chenxiaoye

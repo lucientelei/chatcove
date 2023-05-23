@@ -1,6 +1,6 @@
 package com.ambisiss.quartz.util;
 
-import com.ambisiss.quartz.pojo.QuartzJob;
+import com.ambisiss.quartz.entity.QuartzJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 

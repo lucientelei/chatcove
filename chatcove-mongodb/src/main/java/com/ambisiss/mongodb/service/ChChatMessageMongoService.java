@@ -39,4 +39,11 @@ public interface ChChatMessageMongoService {
      * @return
      */
     int updateRead(String messageUuid, int isRead);
+
+    /**
+     * 查看用户未读消息
+     * @param userId
+     * @return
+     */
+    List<ChChatMessageMongo> listUnReadMsg(Long userId);
 }

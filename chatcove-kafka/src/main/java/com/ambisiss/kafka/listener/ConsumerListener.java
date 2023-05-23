@@ -5,6 +5,7 @@ import com.ambisiss.common.utils.MessageUUIDGenerator;
 import com.ambisiss.kafka.constant.KafkaConstant;
 import com.ambisiss.kafka.server.WebSocketServer;
 import com.ambisiss.mongodb.entity.ChChatMessageMongo;
+import com.ambisiss.mongodb.entity.ChGroupMessageMongo;
 import com.ambisiss.mongodb.service.ChChatMessageMongoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import java.time.LocalDateTime;
 public class ConsumerListener {
 
     @Autowired
-//    @Qualifier(value = "messageMongoService")
     private ChChatMessageMongoService messageMongoService;
 
     /**
@@ -36,13 +36,14 @@ public class ConsumerListener {
     @KafkaListener(topics = KafkaConstant.GROUP_TOPIC)
     public void listenGroup(String message, Acknowledgment ack) {
         log.info(KafkaConstant.GROUP_TOPIC + "发送聊天消息监听" + message);
+        //TODO 缓存群聊信息
+        ChGroupMessageMongo groupMessageMongo = JSON.parseObject(message, ChGroupMessageMongo.class);
+
+        WebSocketServer socketServer = new WebSocketServer();
+        socketServer.kafkaGroupReceiveMsg(groupMessageMongo);
         //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
         ack.acknowledge();
-//        WebSocketServer socketServer = new WebSocketServer();
-//        socketServer.kafkaReceiveMsg(message);
-        //TODO 群聊缓存消息
-//        JSON.parseObject(message, ChChatMessage.class);
-//        messageMongoService.insertMessage(chChatMessage);
+
     }
 
     /**
@@ -55,12 +56,13 @@ public class ConsumerListener {
         log.info(KafkaConstant.PERSONAL_TOPIC + "发送聊天消息监听" + message);
         //TODO 缓存私聊信息
         ChChatMessageMongo chChatMessageMongo = JSON.parseObject(message, ChChatMessageMongo.class);
-        chChatMessageMongo.setRead(false);
+        chChatMessageMongo.setUserId(chChatMessageMongo.getReceiverId());
+        chChatMessageMongo.setRead(0);
         chChatMessageMongo.setMessageUuid(MessageUUIDGenerator.generateUUID());
         chChatMessageMongo.setCreateTime(LocalDateTime.now());
         messageMongoService.insertMessage(chChatMessageMongo);
         //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
-        WebSocketServer socketServer =new WebSocketServer();
+        WebSocketServer socketServer = new WebSocketServer();
         socketServer.kafkaPersonalReceiveMsg(chChatMessageMongo);
         ack.acknowledge();
     }

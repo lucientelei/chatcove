@@ -19,7 +19,7 @@ import java.util.TimeZone;
  * @Data: 2023-4-20 20:49:45
  */
 @Configuration
-@MapperScan(basePackages = {"com.ambisiss.system.mapper"})
+@MapperScan(basePackages = {"com.ambisiss.**.mapper"})
 @ComponentScan(basePackages = {"com.ambisiss.*"})
 @EnableWebMvc
 public class ApplicationConfig {

@@ -1,5 +1,8 @@
 package com.ambisiss.api.config;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -36,6 +40,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Value("${server.port}")
     private String port;
 
+    /**
+     * 定义分隔符
+     */
+    private static final String splitor = ";";
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
@@ -58,16 +67,57 @@ public class SwaggerConfig implements WebMvcConfigurer {
         if (flag) {
             log.info("......Swagger2启动于 localhost:" + port + "/swagger-ui.html");
         }
+//        String basePackages = "com.ambisiss.api.controller" + splitor + "com.ambisiss.quartz.controller";
+        String basePackages = "com.ambisiss.quartz.controller" + splitor + "com.ambisiss.api.controller" + splitor + "com.ambisiss.mongodb.controller";
         return new Docket(DocumentationType.SWAGGER_2)
                 .pathMapping("/")
                 .enable(flag)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ambisiss.api.controller"))
+                .apis(basePackage(basePackages))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts())
                 .apiInfo(apiInfo());
+    }
+
+    /**
+     * 声明基础包
+     *
+     * @param basePackage 基础包路径
+     * @return
+     */
+    public static Predicate<RequestHandler> basePackage(final String basePackage) {
+        return input -> declaringClass(input).transform(handlerPackage(basePackage)).or(true);
+    }
+
+    /**
+     * 校验基础包
+     *
+     * @param basePackage 基础包路径
+     * @return
+     */
+    private static Function<Class<?>, Boolean> handlerPackage(final String basePackage) {
+        return input -> {
+            for (String strPackage : basePackage.split(splitor)) {
+                boolean isMatch = input.getPackage().getName().startsWith(strPackage);
+                if (isMatch) {
+                    return true;
+                }
+            }
+            return false;
+        };
+    }
+
+    /**
+     * 检验基础包实例
+     *
+     * @param requestHandler 请求处理类
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    private static Optional<? extends Class<?>> declaringClass(RequestHandler requestHandler) {
+        return Optional.fromNullable(requestHandler.declaringClass());
     }
 
     /**

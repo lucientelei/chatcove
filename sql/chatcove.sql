@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 12/05/2023 23:22:08
+ Date: 20/05/2023 17:14:49
 */
 
 SET NAMES utf8mb4;
@@ -37,7 +37,7 @@ CREATE TABLE `ch_chat_message`  (
   CONSTRAINT `ch_chat_message_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_chat_message_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_chat_message_ibfk_3` FOREIGN KEY (`message_type_id`) REFERENCES `ch_message_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_chat_message
@@ -62,7 +62,7 @@ CREATE TABLE `ch_friend_relationship`  (
   CONSTRAINT `ch_friend_relationship_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_friend_relationship_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_friend_relationship_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `ch_relation_status` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_friend_relationship
@@ -105,7 +105,7 @@ CREATE TABLE `ch_group_members`  (
   INDEX `member_id`(`member_id`) USING BTREE,
   CONSTRAINT `ch_group_members_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_group_members_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `ch_groups` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_group_members
@@ -130,7 +130,7 @@ CREATE TABLE `ch_group_message`  (
   CONSTRAINT `ch_group_message_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `ch_groups` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_group_message_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_group_message_ibfk_3` FOREIGN KEY (`message_type`) REFERENCES `ch_message_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_group_message
@@ -168,7 +168,7 @@ CREATE TABLE `ch_groups_admin_relation`  (
   INDEX `ch_groups_admin_relation_ibfk_2`(`user_id`) USING BTREE,
   CONSTRAINT `ch_groups_admin_relation_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `ch_groups` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_groups_admin_relation_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_groups_admin_relation
@@ -271,10 +271,58 @@ CREATE TABLE `ch_user_friend`  (
   INDEX `idx_user_friend_id`(`user_id`, `friend_id`) USING BTREE,
   CONSTRAINT `ch_user_friend_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_user_friend_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_user_friend
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for quartz_job
+-- ----------------------------
+DROP TABLE IF EXISTS `quartz_job`;
+CREATE TABLE `quartz_job`  (
+  `job_id` bigint NOT NULL AUTO_INCREMENT COMMENT '任务ID',
+  `job_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '任务名称',
+  `job_group` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'DEFAULT' COMMENT '任务组名',
+  `invoke_target` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '调用目标字符串',
+  `cron_expression` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT 'cron执行表达式',
+  `misfire_policy` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '3' COMMENT '计划执行错误策略（1立即执行 2执行一次 3放弃执行）',
+  `concurrent` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '1' COMMENT '是否并发执行（0允许 1禁止）',
+  `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '状态（0正常 1暂停）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '备注信息',
+  PRIMARY KEY (`job_id`, `job_name`, `job_group`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '定时任务调度表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of quartz_job
+-- ----------------------------
+INSERT INTO `quartz_job` VALUES (1, '系统默认（无参）', 'DEFAULT', 'ryTask.ryNoParams', '0/10 * * * * ?', '3', '1', '1', 'admin', '2023-05-20 17:13:04', '', NULL, '');
+INSERT INTO `quartz_job` VALUES (2, '系统默认（有参）', 'DEFAULT', 'ryTask.ryParams(\'ry\')', '0/15 * * * * ?', '3', '1', '1', 'admin', '2023-05-20 17:13:04', '', NULL, '');
+INSERT INTO `quartz_job` VALUES (3, '系统默认（多参）', 'DEFAULT', 'ryTask.ryMultipleParams(\'ry\', true, 2000L, 316.50D, 100)', '0/20 * * * * ?', '3', '1', '1', 'admin', '2023-05-20 17:13:04', '', NULL, '');
+
+-- ----------------------------
+-- Table structure for quartz_job_log
+-- ----------------------------
+DROP TABLE IF EXISTS `quartz_job_log`;
+CREATE TABLE `quartz_job_log`  (
+  `job_log_id` bigint NOT NULL AUTO_INCREMENT COMMENT '任务日志ID',
+  `job_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '任务名称',
+  `job_group` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '任务组名',
+  `invoke_target` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '调用目标字符串',
+  `job_message` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '日志信息',
+  `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '执行状态（0正常 1失败）',
+  `exception_info` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '异常信息',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`job_log_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '定时任务调度日志表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of quartz_job_log
 -- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

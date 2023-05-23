@@ -1,9 +1,13 @@
-package com.ambisiss.quartz.pojo;
+package com.ambisiss.quartz.entity;
 
+import com.ambisiss.common.domain.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -16,7 +20,10 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuartzJobLog {
+@Accessors(chain = true)
+@TableName("quartz_job_log")
+@ApiModel(value = "QuartzJobLog对象", description = "")
+public class QuartzJobLog extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 

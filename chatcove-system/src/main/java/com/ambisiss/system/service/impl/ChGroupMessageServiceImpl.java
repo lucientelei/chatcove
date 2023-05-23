@@ -90,7 +90,7 @@ public class ChGroupMessageServiceImpl extends ServiceImpl<ChGroupMessageDao, Ch
             ChUser chUser = userDao.selectById(item.getSenderId());
             messageVo.setAvatar(chUser.getAvatar());
             messageVo.setMessage(item.getMessage());
-            messageVo.setMessageType(item.getMessageType());
+            messageVo.setMessageType(item.getMessageTypeId());
             messageVo.setCreateTime(item.getCreateTime());
         }
         return messageVos;

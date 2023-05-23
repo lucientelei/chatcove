@@ -3,7 +3,7 @@ package com.ambisiss.quartz.util;
 
 import com.ambisiss.common.utils.SpringUtils;
 import com.ambisiss.common.utils.StringUtils;
-import com.ambisiss.quartz.pojo.QuartzJob;
+import com.ambisiss.quartz.entity.QuartzJob;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

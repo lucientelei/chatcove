@@ -22,6 +22,9 @@ public class ChChatMessageMongo {
     @Id
     private String id;
 
+    @Field("user_id")
+    private Long userId;
+
     @Field("message_uuid")
     private String messageUuid;
 
@@ -37,9 +40,14 @@ public class ChChatMessageMongo {
     @Field("messageType_id")
     private Long messageTypeId;
 
+    /**
+     * 0: -> 未读
+     * 1: -> 已读
+     */
     @Field("read")
-    private boolean read;
+    private Integer read;
 
+    @Field("create_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
@@ -47,6 +55,7 @@ public class ChChatMessageMongo {
     public String toString() {
         return "ChChatMessageMongo{" +
                 "id='" + id + '\'' +
+                ", userId=" + userId +
                 ", messageUuid='" + messageUuid + '\'' +
                 ", senderId=" + senderId +
                 ", receiverId=" + receiverId +

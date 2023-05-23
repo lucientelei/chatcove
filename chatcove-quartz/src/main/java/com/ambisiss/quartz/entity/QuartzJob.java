@@ -1,12 +1,16 @@
-package com.ambisiss.quartz.pojo;
+package com.ambisiss.quartz.entity;
 
 import com.ambisiss.common.constant.ScheduleConstants;
+import com.ambisiss.common.domain.BaseEntity;
 import com.ambisiss.quartz.util.CronUtils;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -22,7 +26,10 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuartzJob {
+@Accessors(chain = true)
+@TableName("quartz_job")
+@ApiModel(value = "QuartzJob对象", description = "")
+public class QuartzJob extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 

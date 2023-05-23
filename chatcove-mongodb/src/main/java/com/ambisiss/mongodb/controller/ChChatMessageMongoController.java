@@ -1,4 +1,4 @@
-package com.ambisiss.api.controller.mongodb;
+package com.ambisiss.mongodb.controller;
 
 import com.ambisiss.common.global.GlobalResult;
 import com.ambisiss.mongodb.entity.ChChatMessageMongo;
@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/chat/mongodb/chChatMessage")
 @Api(tags = "mongodb用户聊天接口", description = "ChChatMessageMongoDbController")
-public class ChChatMessageMongoDbController {
+public class ChChatMessageMongoController {
 
     @Autowired
     private ChChatMessageMongoService messageMongoService;
@@ -42,6 +42,13 @@ public class ChChatMessageMongoDbController {
     public GlobalResult updateMsg(@RequestParam String messageUuid,
                                   @RequestParam int isRead) {
         int result = messageMongoService.updateRead(messageUuid, isRead);
+        return GlobalResult.success(result);
+    }
+
+    @GetMapping("/unread")
+    @ApiOperation(value = "获取用户未读消息")
+    public GlobalResult listUnRead(@RequestParam Long userId) {
+        List<ChChatMessageMongo> result = messageMongoService.listUnReadMsg(userId);
         return GlobalResult.success(result);
     }
 }

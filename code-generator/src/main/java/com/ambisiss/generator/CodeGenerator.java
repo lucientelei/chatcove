@@ -69,7 +69,7 @@ public class CodeGenerator {
         // 要构建代码的表名
 //        String[] tableNames = {"ch_chat_records", "ch_friend_relationship", "ch_group_members", "ch_group_message",
 //                "ch_groups", "ch_message_status", "ch_message_type", "ch_relation_status", "ch_user", "ch_user_friend"};
-        String[] tableNames ={"worker_node"};
+        String[] tableNames ={"ch_group_message"};
         FastAutoGenerator.create(DB_URL, USERNAME, PASSWORD)
                 // 全局配置
                 .globalConfig(builder -> builder
@@ -138,9 +138,9 @@ public class CodeGenerator {
         Map<OutputFile, String> pathInfo = new HashMap<>(5);
         pathInfo.put(OutputFile.entity, ENTITY_PATH);
         pathInfo.put(OutputFile.mapper, MAPPER_PATH);
-        pathInfo.put(OutputFile.service, SERVICE_PATH);
-        pathInfo.put(OutputFile.serviceImpl, SERVICE_IMPL_PATH);
-        pathInfo.put(OutputFile.controller, CONTROLLER_PATH);
+//        pathInfo.put(OutputFile.service, SERVICE_PATH);
+//        pathInfo.put(OutputFile.serviceImpl, SERVICE_IMPL_PATH);
+//        pathInfo.put(OutputFile.controller, CONTROLLER_PATH);
         pathInfo.put(OutputFile.xml, XML_PATH);
         return pathInfo;
     }

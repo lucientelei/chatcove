@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ambisiss.kafka.constant.KafkaConstant;
 import com.ambisiss.kafka.util.KafkaUtil;
 import com.ambisiss.mongodb.entity.ChChatMessageMongo;
+import com.ambisiss.mongodb.entity.ChGroupMessageMongo;
 import com.ambisiss.mongodb.service.ChChatMessageMongoService;
 import com.ambisiss.mongodb.service.impl.ChChatMessageMongoServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,9 +36,10 @@ public class WebSocketServer {
     private static ChChatMessageMongoService messageMongoService;
 
     @Autowired
-    public void setMessageMongoService(ChChatMessageMongoService messageMongoService){
+    public void setMessageMongoService(ChChatMessageMongoService messageMongoService) {
         WebSocketServer.messageMongoService = messageMongoService;
     }
+
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
      */
@@ -45,7 +48,7 @@ public class WebSocketServer {
     /**
      * 以通道名称为key，连接会话为对象保存起来
      */
-    public static Map<String, Session> websocketClients = new ConcurrentHashMap<String, Session>();
+    public static Map<Long, Session> websocketClients = new ConcurrentHashMap<Long, Session>();
 
     /**
      * 会话
@@ -55,7 +58,7 @@ public class WebSocketServer {
     /**
      * 通道名称
      */
-    private String userId;
+    private Long userId;
 
     /**
      * websocket连接事件处理
@@ -64,12 +67,17 @@ public class WebSocketServer {
      * @param session
      */
     @OnOpen
-    public void onOpen(@PathParam("userId") String userId, Session session) {
+    public void onOpen(@PathParam("userId") Long userId, Session session) {
         this.userId = userId;
         this.session = session;
         websocketClients.put(userId, session);
         onlineCount++;
         log.info("当前socket通道" + userId + "已加入连接！！！");
+        //TODO 查询所有未读信息
+        List<ChChatMessageMongo> unReadMsg = messageMongoService.listUnReadMsg(userId);
+//        for (ChChatMessageMongo item : unReadMsg) {
+//            kafkaPersonalReceiveMsg(item);
+//        }
     }
 
     /**
@@ -104,7 +112,6 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        JSONObject jsonObject = JSONObject.parseObject(message);
         if ("ping".equals(message)) {
             //心跳
             session.getBasicRemote().sendText("pong");
@@ -143,20 +150,29 @@ public class WebSocketServer {
      * @param chatMessageMongo
      */
     public void kafkaPersonalReceiveMsg(ChChatMessageMongo chatMessageMongo) {
-        String receiverId = String.valueOf(chatMessageMongo.getReceiverId());
+        Long receiverId = chatMessageMongo.getReceiverId();
         if (websocketClients.get(receiverId) != null) {
             Session session = websocketClients.get(receiverId);
             //进行消息发送
             try {
                 session.getBasicRemote().sendText(chatMessageMongo.toString());
                 //TODO 更新mongodb已读状态
-                chatMessageMongo.setRead(true);
+                chatMessageMongo.setRead(1);
                 log.info("-------session上线接收后：" + chatMessageMongo.toString());
                 messageMongoService.updateRead(chatMessageMongo.getMessageUuid(), 1);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 服务端返回信息给用户端
+     *
+     * @param
+     */
+    public void kafkaGroupReceiveMsg(ChGroupMessageMongo groupMessageMongo) {
+
     }
 
     /**
