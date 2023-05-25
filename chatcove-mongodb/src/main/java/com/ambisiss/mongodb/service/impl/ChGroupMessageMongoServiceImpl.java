@@ -1,8 +1,14 @@
 package com.ambisiss.mongodb.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.ambisiss.common.utils.MessageUUIDGenerator;
+import com.ambisiss.mongodb.dto.ChGroupMsgInsertDto;
 import com.ambisiss.mongodb.entity.ChGroupMessageMongo;
+import com.ambisiss.mongodb.entity.GroupMessage;
 import com.ambisiss.mongodb.service.ChGroupMessageMongoService;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,7 +17,11 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: chenxiaoye
@@ -25,39 +35,93 @@ public class ChGroupMessageMongoServiceImpl implements ChGroupMessageMongoServic
     private MongoTemplate mongoTemplate;
 
     @Override
-    public int insertGroupMsg(ChGroupMessageMongo groupMessageMongo) {
-//        new Query().addCriteria(Criteria.where("user_id").is(groupMessageMongo))
-        return 1;
-    }
-
-    @Override
-    public int delGroupMsg(Long messageUuid) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("message_uuid").is(messageUuid));
-        ChGroupMessageMongo messageMongo = mongoTemplate.findAndRemove(query, ChGroupMessageMongo.class);
-        if (!StringUtils.isEmpty(messageMongo)) {
-            return 0;
+    public int insertGroupMsg(ChGroupMsgInsertDto dto) {
+        //获取用户ID
+        Long userId = dto.getUserId();
+        GroupMessage groupMessageAdd = generateGroupMessage(dto);
+        Criteria criteria = Criteria.where("userId").is(userId);
+        Query query = new Query().addCriteria(criteria);
+        ChGroupMessageMongo messageMongo = mongoTemplate.findOne(query, ChGroupMessageMongo.class);
+        //第一次添加
+        if (messageMongo == null) {
+            List<GroupMessage> groupMessages = new ArrayList<>();
+            groupMessages.add(groupMessageAdd);
+            Update update = new Update().set("userId", userId).set("groupMessageList", groupMessages);
+            Query query1 = new Query().addCriteria(criteria);
+            mongoTemplate.upsert(query1, update, ChGroupMessageMongo.class);
+        } else {
+            //TODO 追加元素
+            Criteria criteria1 = new Criteria().andOperator(Criteria.where("userId").is(userId));
+            Query query1 = new Query().addCriteria(criteria1);
+            Update update = new Update().addToSet("groupMessageList", groupMessageAdd);
+            mongoTemplate.upsert(query1, update, ChGroupMessageMongo.class);
         }
         return 1;
     }
 
     @Override
-    public int updateRead(String messageUuid, int isRead) {
-        Query query = new Query().addCriteria(Criteria.where("message_uuid").is(messageUuid));
-        Update update = new Update().set("read", isRead);
-        UpdateResult result = mongoTemplate.upsert(query, update, ChGroupMessageMongo.class);
-        return (int) result.getModifiedCount();
+    public int delGroupMsg(Long userId, String messageUuid) {
+        Update update = new Update();
+        Document document = new Document("messageUuid", messageUuid);
+        update.pull("groupMessageList", document);
+        Query query = new Query(new Criteria().andOperator(
+                Criteria.where("userId").is(userId),
+                Criteria.where("groupMessageList.messageUuid").is(messageUuid)
+        ));
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, ChGroupMessageMongo.class);
+        return (int) updateResult.getMatchedCount();
     }
 
     @Override
-    public List<ChGroupMessageMongo> listAll() {
-        return mongoTemplate.findAll(ChGroupMessageMongo.class);
+    public int updateRead(Long userId, String messageUuid, int isRead) {
+        Update update = new Update();
+        update.set("groupMessageList.$.read", isRead);
+        Query query = new Query(new Criteria().andOperator(
+                Criteria.where("userId").is(userId),
+                Criteria.where("groupMessageList.messageUuid").is(messageUuid)
+        ));
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, ChGroupMessageMongo.class);
+        return (int) updateResult.getModifiedCount();
     }
 
     @Override
-    public List<ChGroupMessageMongo> listUnReadByUserId(Long userId) {
-        Query query = new Query().addCriteria(Criteria.where("user_id").is(userId)
-                .and("read").is(0));
-        return mongoTemplate.find(query, ChGroupMessageMongo.class);
+    public ChGroupMessageMongo listAll(Long userId) {
+        Criteria criteria = new Criteria().andOperator(Criteria.where("userId").is(userId));
+        Query query = new Query().addCriteria(criteria);
+        ChGroupMessageMongo messageMongo = mongoTemplate.findOne(query, ChGroupMessageMongo.class);
+        return messageMongo;
+    }
+
+    @Override
+    public ChGroupMessageMongo listUnReadByUserId(Long userId) {
+        Criteria criteria = new Criteria().andOperator(Criteria.where("userId").is(userId));
+        Query query = new Query().addCriteria(criteria);
+        ChGroupMessageMongo messageMongo = mongoTemplate.findOne(query, ChGroupMessageMongo.class);
+        if (messageMongo != null && messageMongo.getGroupMessageList() != null) {
+            //TODO 获取未读消息重新定义list并添加
+            List<GroupMessage> unReadList = messageMongo.getGroupMessageList().stream()
+                    .filter(item -> item.getRead() == 0).collect(Collectors.toList());
+            messageMongo.setGroupMessageList(unReadList);
+        }
+        return messageMongo;
+    }
+
+    /**
+     * 生成groupMessage
+     *
+     * @param dto
+     * @return
+     */
+    private GroupMessage generateGroupMessage(ChGroupMsgInsertDto dto) {
+        GroupMessage groupMessage = new GroupMessage();
+        //TODO  设置相关信息
+        groupMessage.setSenderId(dto.getSenderId());
+        groupMessage.setGroupId(dto.getGroupId());
+        groupMessage.setMessageTypeId(dto.getMessageTypeId());
+        groupMessage.setMessage(dto.getMessage());
+        groupMessage.setCreateTime(LocalDateTime.now());
+        groupMessage.setMessageUuid(MessageUUIDGenerator.generateUUID());
+        groupMessage.setRead(0);
+        return groupMessage;
     }
 }

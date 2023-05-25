@@ -1,5 +1,6 @@
 package com.ambisiss.mongodb.service;
 
+import com.ambisiss.mongodb.dto.ChGroupMsgInsertDto;
 import com.ambisiss.mongodb.entity.ChGroupMessageMongo;
 
 import java.util.List;
@@ -14,10 +15,10 @@ public interface ChGroupMessageMongoService {
     /**
      * 新增群聊消息
      *
-     * @param groupMessageMongo
+     * @param dto
      * @return
      */
-    int insertGroupMsg(ChGroupMessageMongo groupMessageMongo);
+    int insertGroupMsg(ChGroupMsgInsertDto dto);
 
     /**
      * 删除群聊消息
@@ -25,23 +26,24 @@ public interface ChGroupMessageMongoService {
      * @param messageUuid
      * @return
      */
-    int delGroupMsg(Long messageUuid);
+    int delGroupMsg(Long userId, String messageUuid);
 
     /**
      * 更新已读状态
      *
+     * @param userId
      * @param messageUuid
      * @param isRead
      * @return
      */
-    int updateRead(String messageUuid, int isRead);
+    int updateRead(Long userId, String messageUuid, int isRead);
 
     /**
      * 查询全部群聊消息
      *
      * @return
      */
-    List<ChGroupMessageMongo> listAll();
+    ChGroupMessageMongo listAll(Long userId);
 
     /**
      * 查询用户未读消息
@@ -49,7 +51,7 @@ public interface ChGroupMessageMongoService {
      * @param userId
      * @return
      */
-    List<ChGroupMessageMongo> listUnReadByUserId(Long userId);
+    ChGroupMessageMongo listUnReadByUserId(Long userId);
 
 
 }

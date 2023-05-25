@@ -1,6 +1,7 @@
 package com.ambisiss.mongodb.controller;
 
 import com.ambisiss.common.global.GlobalResult;
+import com.ambisiss.mongodb.dto.ChGroupMsgInsertDto;
 import com.ambisiss.mongodb.entity.ChGroupMessageMongo;
 import com.ambisiss.mongodb.service.ChGroupMessageMongoService;
 import io.swagger.annotations.Api;
@@ -25,37 +26,39 @@ public class ChGroupMessageMongoController {
 
     @PostMapping("/save")
     @ApiOperation(value = "新增群聊消息")
-    public GlobalResult insert(@RequestBody ChGroupMessageMongo groupMessageMongo) {
-        int result = messageMongoService.insertGroupMsg(groupMessageMongo);
+    public GlobalResult insert(@RequestBody ChGroupMsgInsertDto dto) {
+        int result = messageMongoService.insertGroupMsg(dto);
         return GlobalResult.success(result);
     }
 
     @DeleteMapping("/delete")
     @ApiOperation(value = "删除群聊消息")
-    public GlobalResult deleteGroupMsg(@RequestParam Long messageUuid) {
-        int result = messageMongoService.delGroupMsg(messageUuid);
+    public GlobalResult deleteGroupMsg(@RequestParam Long userId,
+                                       @RequestParam String messageUuid) {
+        int result = messageMongoService.delGroupMsg(userId, messageUuid);
         return GlobalResult.success(result);
     }
 
     @PostMapping("/update")
     @ApiOperation(value = "更新已读状态")
-    public GlobalResult updateReadStatus(@RequestParam String messageUuid,
+    public GlobalResult updateReadStatus(@RequestParam Long userId,
+                                         @RequestParam String messageUuid,
                                          @RequestParam int isRead) {
-        int result = messageMongoService.updateRead(messageUuid, isRead);
+        int result = messageMongoService.updateRead(userId, messageUuid, isRead);
         return GlobalResult.success(result);
     }
 
     @GetMapping("/list")
     @ApiOperation(value = "查询全部群聊消息")
-    public GlobalResult listAll() {
-        List<ChGroupMessageMongo> result = messageMongoService.listAll();
+    public GlobalResult listAll(@RequestParam Long userId) {
+        ChGroupMessageMongo result = messageMongoService.listAll(userId);
         return GlobalResult.success(result);
     }
 
     @GetMapping("/listById")
     @ApiOperation(value = "查询用户未读消息")
-    public GlobalResult listByUserId(Long userId) {
-        List<ChGroupMessageMongo> result = messageMongoService.listUnReadByUserId(userId);
+    public GlobalResult listByUserId(@RequestParam Long userId) {
+        ChGroupMessageMongo result = messageMongoService.listUnReadByUserId(userId);
         return GlobalResult.success(result);
     }
 
