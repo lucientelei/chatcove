@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-@Document("ch_group_message")
+@Document(collection = "ch_group_message")
 public class ChGroupMessageMongo {
 
     @Id
@@ -29,6 +29,4 @@ public class ChGroupMessageMongo {
 
     private List<GroupMessage> groupMessageList;
 
-    @ApiModelProperty(hidden = true)
-    private GroupMessage groupMessage;
 }

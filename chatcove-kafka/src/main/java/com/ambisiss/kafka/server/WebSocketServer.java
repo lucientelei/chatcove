@@ -74,7 +74,7 @@ public class WebSocketServer {
         onlineCount++;
         log.info("当前socket通道" + userId + "已加入连接！！！");
         //TODO 查询所有未读信息
-        List<ChChatMessageMongo> unReadMsg = messageMongoService.listUnReadMsg(userId);
+//        List<ChChatMessageMongo> unReadMsg = messageMongoService.listUnReadMsg(userId);
 //        for (ChChatMessageMongo item : unReadMsg) {
 //            kafkaPersonalReceiveMsg(item);
 //        }
@@ -150,20 +150,20 @@ public class WebSocketServer {
      * @param chatMessageMongo
      */
     public void kafkaPersonalReceiveMsg(ChChatMessageMongo chatMessageMongo) {
-        Long receiverId = chatMessageMongo.getReceiverId();
-        if (websocketClients.get(receiverId) != null) {
-            Session session = websocketClients.get(receiverId);
-            //进行消息发送
-            try {
-                session.getBasicRemote().sendText(chatMessageMongo.toString());
-                //TODO 更新mongodb已读状态
-                chatMessageMongo.setRead(1);
-                log.info("-------session上线接收后：" + chatMessageMongo.toString());
-                messageMongoService.updateRead(chatMessageMongo.getMessageUuid(), 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        Long receiverId = chatMessageMongo.getReceiverId();
+//        if (websocketClients.get(receiverId) != null) {
+//            Session session = websocketClients.get(receiverId);
+//            //进行消息发送
+//            try {
+//                session.getBasicRemote().sendText(chatMessageMongo.toString());
+//                //TODO 更新mongodb已读状态
+//                chatMessageMongo.setRead(1);
+//                log.info("-------session上线接收后：" + chatMessageMongo.toString());
+//                messageMongoService.updateRead(chatMessageMongo.getMessageUuid(), 1);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     /**

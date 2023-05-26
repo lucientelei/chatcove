@@ -1,6 +1,7 @@
 package com.ambisiss.mongodb.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -8,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author: chenxiaoye
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Document("ch_chat_message")
+@Document(collection = "ch_chat_message")
 public class ChChatMessageMongo {
 
     @Id
@@ -25,44 +27,6 @@ public class ChChatMessageMongo {
     @Field("user_id")
     private Long userId;
 
-    @Field("message_uuid")
-    private String messageUuid;
+    private List<ChatMessage> chatMessageList;
 
-    @Field("sender_id")
-    private Long senderId;
-
-    @Field("receiver_id")
-    private Long receiverId;
-
-    @Field("message")
-    private String message;
-
-    @Field("messageType_id")
-    private Long messageTypeId;
-
-    /**
-     * 0: -> 未读
-     * 1: -> 已读
-     */
-    @Field("read")
-    private Integer read;
-
-    @Field("create_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
-
-    @Override
-    public String toString() {
-        return "ChChatMessageMongo{" +
-                "id='" + id + '\'' +
-                ", userId=" + userId +
-                ", messageUuid='" + messageUuid + '\'' +
-                ", senderId=" + senderId +
-                ", receiverId=" + receiverId +
-                ", message='" + message + '\'' +
-                ", messageTypeId=" + messageTypeId +
-                ", read=" + read +
-                ", createTime=" + createTime +
-                '}';
-    }
 }

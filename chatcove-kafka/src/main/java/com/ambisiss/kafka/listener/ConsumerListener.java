@@ -39,8 +39,8 @@ public class ConsumerListener {
         //TODO 缓存群聊信息
         ChGroupMessageMongo groupMessageMongo = JSON.parseObject(message, ChGroupMessageMongo.class);
 
-        WebSocketServer socketServer = new WebSocketServer();
-        socketServer.kafkaGroupReceiveMsg(groupMessageMongo);
+//        WebSocketServer socketServer = new WebSocketServer();
+//        socketServer.kafkaGroupReceiveMsg(groupMessageMongo);
         //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
         ack.acknowledge();
 
@@ -55,15 +55,15 @@ public class ConsumerListener {
     public void listenPersonal(String message, Acknowledgment ack) {
         log.info(KafkaConstant.PERSONAL_TOPIC + "发送聊天消息监听" + message);
         //TODO 缓存私聊信息
-        ChChatMessageMongo chChatMessageMongo = JSON.parseObject(message, ChChatMessageMongo.class);
-        chChatMessageMongo.setUserId(chChatMessageMongo.getReceiverId());
-        chChatMessageMongo.setRead(0);
-        chChatMessageMongo.setMessageUuid(MessageUUIDGenerator.generateUUID());
-        chChatMessageMongo.setCreateTime(LocalDateTime.now());
-        messageMongoService.insertMessage(chChatMessageMongo);
-        //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
-        WebSocketServer socketServer = new WebSocketServer();
-        socketServer.kafkaPersonalReceiveMsg(chChatMessageMongo);
+//        ChChatMessageMongo chChatMessageMongo = JSON.parseObject(message, ChChatMessageMongo.class);
+//        chChatMessageMongo.setUserId(chChatMessageMongo.getReceiverId());
+//        chChatMessageMongo.setRead(0);
+//        chChatMessageMongo.setMessageUuid(MessageUUIDGenerator.generateUUID());
+//        chChatMessageMongo.setCreateTime(LocalDateTime.now());
+//        messageMongoService.insertMessage(chChatMessageMongo);
+//        //TODO kafka接收消息消费成功 服务端返回成功标志给用户端
+//        WebSocketServer socketServer = new WebSocketServer();
+//        socketServer.kafkaPersonalReceiveMsg(chChatMessageMongo);
         ack.acknowledge();
     }
 }

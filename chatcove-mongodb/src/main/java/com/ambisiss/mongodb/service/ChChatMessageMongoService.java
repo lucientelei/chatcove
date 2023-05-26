@@ -1,5 +1,6 @@
 package com.ambisiss.mongodb.service;
 
+import com.ambisiss.mongodb.dto.ChChatMsgInsertDto;
 import com.ambisiss.mongodb.entity.ChChatMessageMongo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -14,36 +15,44 @@ public interface ChChatMessageMongoService {
 
     /**
      * 新增消息
-     * @param chatMessage
+     *
+     * @param dto
      * @return
      */
-    int insertMessage(ChChatMessageMongo chatMessage);
+    int insertMessage(ChChatMsgInsertDto dto);
 
     /**
      * 查看全部消息
+     *
+     * @param userId
      * @return
      */
-    List<ChChatMessageMongo> listAll();
+    ChChatMessageMongo listAll(Long userId);
 
     /**
      * 删除指定消息
+     *
+     * @param userId
      * @param messageUuid
      * @return
      */
-    int delMessage(String messageUuid);
+    int delMessage(Long userId, String messageUuid);
 
     /**
      * 更新已读状态
+     *
+     * @param userId
      * @param messageUuid
      * @param isRead
      * @return
      */
-    int updateRead(String messageUuid, int isRead);
+    int updateRead(Long userId, String messageUuid, int isRead);
 
     /**
      * 查看用户未读消息
+     *
      * @param userId
      * @return
      */
-    List<ChChatMessageMongo> listUnReadMsg(Long userId);
+    ChChatMessageMongo listUnReadByUserId(Long userId);
 }

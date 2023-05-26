@@ -11,31 +11,27 @@ import java.time.LocalDateTime;
 /**
  * @Author: chenxiaoye
  * @Description:
- * @Data: 2023-5-24 09:54:31
+ * @Data: 2023-5-26 10:31:03
  */
 @Getter
 @Setter
-@Document(collection = "group_message")
-public class GroupMessage {
+@Document(collection = "chat_message")
+public class ChatMessage {
 
-//    @Field("message_uuid")
+    @Field("message_uuid")
     private String messageUuid;
-
-    @Field("group_id")
-    private Long groupId;
 
     @Field("sender_id")
     private Long senderId;
 
-    @Field("message_uuid")
+    @Field("receiver_id")
+    private Long receiverId;
+
+    @Field("message")
     private String message;
 
     @Field("message_type_id")
     private Long messageTypeId;
-
-    @Field("create_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
 
     /**
      * 0: -> 未读
@@ -44,4 +40,7 @@ public class GroupMessage {
     @Field("read")
     private Integer read;
 
+    @Field("create_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 }
