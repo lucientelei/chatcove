@@ -18,7 +18,7 @@ public interface ChGroupMessageMongoService {
      * @param dto
      * @return
      */
-    int insertGroupMsg(ChGroupMsgInsertDto dto);
+    String insertGroupMsg(ChGroupMsgInsertDto dto);
 
     /**
      * 删除群聊消息

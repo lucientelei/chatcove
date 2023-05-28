@@ -32,7 +32,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        log.info("注入interceptors");
+//        log.info("注入interceptors");
         List<String> excludePath = new ArrayList<>();
 
         // 白名单

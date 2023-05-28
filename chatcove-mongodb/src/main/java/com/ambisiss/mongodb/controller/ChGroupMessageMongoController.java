@@ -27,7 +27,7 @@ public class ChGroupMessageMongoController {
     @PostMapping("/save")
     @ApiOperation(value = "新增群聊消息")
     public GlobalResult insert(@RequestBody ChGroupMsgInsertDto dto) {
-        int result = messageMongoService.insertGroupMsg(dto);
+        String result = messageMongoService.insertGroupMsg(dto);
         return GlobalResult.success(result);
     }
 

@@ -22,7 +22,7 @@ import javax.validation.constraints.Pattern;
 public class ChUserInsertUpdateDto {
 
     @NotBlank(message = "用户名不能为空", groups = Insert.class)
-    @Pattern(regexp = "[a-zA-Z\\u4E00-\\u9FA5][a-zA-Z0-9\\u4E00-\\u9FA5]{6,20}", message = "用户名长度在6-20个字符之间")
+    @Pattern(regexp = "[a-zA-Z\\u4E00-\\u9FA5][a-zA-Z0-9\\u4E00-\\u9FA5]{1,20}", message = "用户名长度在6-20个字符之间")
     private String username;
 
     @NotBlank(message = "密码不能为空", groups = Insert.class)

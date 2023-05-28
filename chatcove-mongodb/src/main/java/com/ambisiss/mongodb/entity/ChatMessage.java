@@ -43,4 +43,17 @@ public class ChatMessage {
     @Field("create_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
+
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "messageUuid='" + messageUuid + '\'' +
+                ", senderId=" + senderId +
+                ", receiverId=" + receiverId +
+                ", message='" + message + '\'' +
+                ", messageTypeId=" + messageTypeId +
+                ", read=" + read +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

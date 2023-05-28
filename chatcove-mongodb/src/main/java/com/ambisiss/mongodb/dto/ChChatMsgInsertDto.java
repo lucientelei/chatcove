@@ -32,4 +32,7 @@ public class ChChatMsgInsertDto {
 
     @ApiModelProperty("消息类型")
     private Long messageTypeId;
+
+    @ApiModelProperty(value = "消息uuid", hidden = true)
+    private String messageUuid;
 }

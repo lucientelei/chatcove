@@ -37,4 +37,11 @@ public interface ChGroupMembersService extends IService<ChGroupMembers> {
      * @return
      */
     List<ChGroupMembersVo> listMember(Long groupId);
+
+    /**
+     * 删除群聊群组成员
+     * @param groupId
+     * @return
+     */
+    int delGroupMember(Long groupId);
 }

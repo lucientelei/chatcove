@@ -2,17 +2,20 @@ package com.ambisiss.system.service.impl;
 
 import com.ambisiss.common.dto.ChGroupMembersDto;
 import com.ambisiss.common.vo.ChGroupMembersVo;
+import com.ambisiss.common.vo.ChUserVo;
 import com.ambisiss.system.entity.ChGroupMembers;
 import com.ambisiss.system.entity.ChUser;
 import com.ambisiss.system.mapper.ChGroupMembersDao;
 import com.ambisiss.system.mapper.ChUserDao;
 import com.ambisiss.system.service.ChGroupMembersService;
+import com.ambisiss.system.service.ChUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +34,15 @@ public class ChGroupMembersServiceImpl extends ServiceImpl<ChGroupMembersDao, Ch
     private ChGroupMembersDao groupMembersDao;
 
     @Autowired
-    private ChUserDao userDao;
+    private ChUserService userService;
 
     @Override
     public int insertMember(ChGroupMembersDto dto) {
         ChGroupMembers members = new ChGroupMembers();
         BeanUtils.copyProperties(dto, members);
-        members.setGroupNickname(userDao.selectById(dto.getMemberId()).getUsername());
+        ChUserVo userVo = userService.getUserById(dto.getMemberId());
+        members.setGroupNickname(userVo.getUsername());
+        members.setJoinTime(LocalDateTime.now());
         return groupMembersDao.insert(members);
     }
 
@@ -56,6 +61,13 @@ public class ChGroupMembersServiceImpl extends ServiceImpl<ChGroupMembersDao, Ch
         return generatorVo(membersList);
     }
 
+    @Override
+    public int delGroupMember(Long groupId) {
+        QueryWrapper<ChGroupMembers> wrapper = new QueryWrapper<>();
+        wrapper.eq("group_id", groupId);
+        return groupMembersDao.delete(wrapper);
+    }
+
     private List<ChGroupMembersVo> generatorVo(List<ChGroupMembers> membersList) {
         List<ChGroupMembersVo> membersVos = new ArrayList<>();
         for (ChGroupMembers item : membersList) {
@@ -63,10 +75,10 @@ public class ChGroupMembersServiceImpl extends ServiceImpl<ChGroupMembersDao, Ch
             membersVo.setMemberId(item.getMemberId());
             membersVo.setGroupId(item.getGroupId());
             membersVo.setGroupNickname(item.getGroupNickname());
-            ChUser chUser = userDao.selectById(item.getMemberId());
-            membersVo.setUsername(chUser.getUsername());
-            membersVo.setGender(chUser.getGender());
-            membersVo.setAvatar(chUser.getAvatar());
+            ChUserVo userVo = userService.getUserById(item.getMemberId());
+            membersVo.setUsername(userVo.getUsername());
+            membersVo.setGender(userVo.getGender());
+            membersVo.setAvatar(userVo.getAvatar());
             membersVos.add(membersVo);
         }
 

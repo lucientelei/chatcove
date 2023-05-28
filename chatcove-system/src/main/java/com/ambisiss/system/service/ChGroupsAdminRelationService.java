@@ -37,5 +37,10 @@ public interface ChGroupsAdminRelationService extends IService<ChGroupsAdminRela
      */
     List<Long> getGroupAdmin(Long groupId);
 
-
+    /**
+     * 删除群聊管理员关系
+     * @param groupId
+     * @return
+     */
+    int delGroupRelation(Long groupId);
 }

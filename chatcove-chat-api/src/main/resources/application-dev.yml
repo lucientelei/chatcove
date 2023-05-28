@@ -1,4 +1,6 @@
 spring:
+  jpa:
+    open-in-view: false
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -10,7 +12,7 @@ spring:
         password: root
       # 从库数据源
       slave:
-        enable: flase
+        enable: false
         url:
         username:
         password:
@@ -155,9 +157,9 @@ spring:
       authenticationDatabase: admin
       # 连接的数据库
       database: chatcove
-      time-zone: Asia/Shanghai
 
 
 #日志拓展配置
 logging:
-  file: classpath:logback-spring.xml
+  file:
+    name: classpath:logback-spring.xml

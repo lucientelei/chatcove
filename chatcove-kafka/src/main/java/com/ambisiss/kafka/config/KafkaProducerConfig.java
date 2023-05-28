@@ -51,7 +51,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
-        log.info("---------配置KafkaTemplate---------");
+//        log.info("---------配置KafkaTemplate---------");
         KafkaUtil.createKafkaTopic(KafkaConstant.GROUP_TOPIC, KafkaConstant.PARTITION, KafkaConstant.REPLICATION);
         KafkaUtil.createKafkaTopic(KafkaConstant.PERSONAL_TOPIC, KafkaConstant.PARTITION, KafkaConstant.REPLICATION);
         return new KafkaTemplate<>(producerFactory());

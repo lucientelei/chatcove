@@ -44,4 +44,16 @@ public class GroupMessage {
     @Field("read")
     private Integer read;
 
+    @Override
+    public String toString() {
+        return "GroupMessage{" +
+                "messageUuid='" + messageUuid + '\'' +
+                ", groupId=" + groupId +
+                ", senderId=" + senderId +
+                ", message='" + message + '\'' +
+                ", messageTypeId=" + messageTypeId +
+                ", createTime=" + createTime +
+                ", read=" + read +
+                '}';
+    }
 }

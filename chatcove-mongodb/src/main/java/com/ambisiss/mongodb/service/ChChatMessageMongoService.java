@@ -19,7 +19,7 @@ public interface ChChatMessageMongoService {
      * @param dto
      * @return
      */
-    int insertMessage(ChChatMsgInsertDto dto);
+    String insertMessage(ChChatMsgInsertDto dto);
 
     /**
      * 查看全部消息
@@ -55,4 +55,12 @@ public interface ChChatMessageMongoService {
      * @return
      */
     ChChatMessageMongo listUnReadByUserId(Long userId);
+
+    /**
+     * 通过uuid获取指定信息
+     * @param userId
+     * @param messageUuid
+     * @return
+     */
+//    ChChatMessageMongo getMsgByUuid(Long userId, String messageUuid);
 }

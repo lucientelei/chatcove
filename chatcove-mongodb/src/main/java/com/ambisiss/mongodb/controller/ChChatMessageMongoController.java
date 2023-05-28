@@ -27,7 +27,7 @@ public class ChChatMessageMongoController {
     @PostMapping("/insert")
     @ApiOperation(value = "新增消息缓存")
     public GlobalResult insertMsg(@RequestBody ChChatMsgInsertDto dto) {
-        int result = messageMongoService.insertMessage(dto);
+        String result = messageMongoService.insertMessage(dto);
         return GlobalResult.success(result);
     }
 

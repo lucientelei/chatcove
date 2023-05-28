@@ -2,12 +2,19 @@ package com.ambisiss.kafka.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ambisiss.common.constant.MessageReadConstant;
+import com.ambisiss.common.vo.ChGroupMembersVo;
 import com.ambisiss.kafka.constant.KafkaConstant;
 import com.ambisiss.kafka.util.KafkaUtil;
+import com.ambisiss.mongodb.dto.ChChatMsgInsertDto;
+import com.ambisiss.mongodb.dto.ChGroupMsgInsertDto;
 import com.ambisiss.mongodb.entity.ChChatMessageMongo;
 import com.ambisiss.mongodb.entity.ChGroupMessageMongo;
 import com.ambisiss.mongodb.service.ChChatMessageMongoService;
+import com.ambisiss.mongodb.service.ChGroupMessageMongoService;
 import com.ambisiss.mongodb.service.impl.ChChatMessageMongoServiceImpl;
+import com.ambisiss.system.entity.ChGroupMembers;
+import com.ambisiss.system.service.ChGroupMembersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +29,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @Author: chenxiaoye
@@ -33,11 +41,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/chat/{userId}")
 public class WebSocketServer {
 
-    private static ChChatMessageMongoService messageMongoService;
+    private static ChChatMessageMongoService chatMongoService;
+
+    private static ChGroupMessageMongoService groupMongoService;
+
+    private static ChGroupMembersService groupMembersService;
 
     @Autowired
-    public void setMessageMongoService(ChChatMessageMongoService messageMongoService) {
-        WebSocketServer.messageMongoService = messageMongoService;
+    public void setMessageMongoService(ChChatMessageMongoService chatMongoService,
+                                       ChGroupMessageMongoService groupMongoService,
+                                       ChGroupMembersService groupMembersService) {
+        WebSocketServer.chatMongoService = chatMongoService;
+        WebSocketServer.groupMongoService = groupMongoService;
+        WebSocketServer.groupMembersService = groupMembersService;
     }
 
     /**
@@ -74,10 +90,30 @@ public class WebSocketServer {
         onlineCount++;
         log.info("当前socket通道" + userId + "已加入连接！！！");
         //TODO 查询所有未读信息
-//        List<ChChatMessageMongo> unReadMsg = messageMongoService.listUnReadMsg(userId);
-//        for (ChChatMessageMongo item : unReadMsg) {
-//            kafkaPersonalReceiveMsg(item);
-//        }
+        ChChatMessageMongo chatMessageMongo = chatMongoService.listUnReadByUserId(userId);
+        ChGroupMessageMongo groupMessageMongo = groupMongoService.listUnReadByUserId(userId);
+        if (chatMessageMongo != null && chatMessageMongo.getChatMessageList() != null) {
+            chatMessageMongo.getChatMessageList().forEach(item -> {
+                synchronized (session) {
+                    try {
+                        session.getBasicRemote().sendText(item.toString());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
+        if (groupMessageMongo != null && groupMessageMongo.getGroupMessageList() != null) {
+            groupMessageMongo.getGroupMessageList().forEach(item -> {
+                synchronized (session) {
+                    try {
+                        session.getBasicRemote().sendText(item.toString());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -147,23 +183,21 @@ public class WebSocketServer {
     /**
      * 服务端返回信息给用户端
      *
-     * @param chatMessageMongo
+     * @param dto
      */
-    public void kafkaPersonalReceiveMsg(ChChatMessageMongo chatMessageMongo) {
-//        Long receiverId = chatMessageMongo.getReceiverId();
-//        if (websocketClients.get(receiverId) != null) {
-//            Session session = websocketClients.get(receiverId);
-//            //进行消息发送
-//            try {
-//                session.getBasicRemote().sendText(chatMessageMongo.toString());
-//                //TODO 更新mongodb已读状态
-//                chatMessageMongo.setRead(1);
-//                log.info("-------session上线接收后：" + chatMessageMongo.toString());
-//                messageMongoService.updateRead(chatMessageMongo.getMessageUuid(), 1);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+    public void kafkaPersonalReceiveMsg(ChChatMsgInsertDto dto) {
+        Long receiverId = dto.getReceiverId();
+        if (websocketClients.get(receiverId) != null) {
+            Session session = websocketClients.get(receiverId);
+            //进行消息发送
+            try {
+                session.getBasicRemote().sendText(dto.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            //TODO 更新mongodb已读状态
+            chatMongoService.updateRead(dto.getUserId(), dto.getMessageUuid(), MessageReadConstant.READ);
+        }
     }
 
     /**
@@ -171,8 +205,21 @@ public class WebSocketServer {
      *
      * @param
      */
-    public void kafkaGroupReceiveMsg(ChGroupMessageMongo groupMessageMongo) {
-        //TODO
+    public void kafkaGroupReceiveMsg(ChGroupMsgInsertDto dto) {
+        //获取群组ID
+        Long groupId = dto.getGroupId();
+        //TODO 查询群聊成员，查看成员在线则发送消息
+        List<ChGroupMembersVo> membersVos = groupMembersService.listMember(groupId);
+        //获取成员用户ID列表
+        List<Long> memberIds = membersVos.stream().map(ChGroupMembersVo::getMemberId).collect(Collectors.toList());
+        memberIds.forEach(item -> {
+            if (websocketClients.get(item) != null) {
+                Session session = websocketClients.get(item);
+                session.getAsyncRemote().sendText(dto.toString());
+                //TODO 更新已读状态
+                groupMongoService.updateRead(item, dto.getMessageUuid(), MessageReadConstant.READ);
+            }
+        });
     }
 
     /**
@@ -184,11 +231,7 @@ public class WebSocketServer {
     public static void sendMessage(Long userId, String jsonString) {
         Session currSession = websocketClients.get(userId);
         if (currSession != null) {
-            try {
-                currSession.getBasicRemote().sendText(jsonString);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            currSession.getAsyncRemote().sendText(jsonString);
         }
     }
 

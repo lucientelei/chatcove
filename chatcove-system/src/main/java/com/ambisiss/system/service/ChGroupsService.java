@@ -23,10 +23,10 @@ public interface ChGroupsService extends IService<ChGroups> {
 
     /**
      * 解散群组
-     * @param id
+     * @param groupId
      * @return
      */
-    int delGroup(Long id);
+    int delGroup(Long groupId);
 
 
 }

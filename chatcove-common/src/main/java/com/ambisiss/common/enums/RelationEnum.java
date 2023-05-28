@@ -1,4 +1,4 @@
-package com.ambisiss.common.constant;
+package com.ambisiss.common.enums;
 
 /**
  * @Author: chenxiaoye

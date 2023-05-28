@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 20/05/2023 17:14:49
+ Date: 28/05/2023 16:41:56
 */
 
 SET NAMES utf8mb4;
@@ -99,17 +99,21 @@ CREATE TABLE `ch_group_members`  (
   `member_id` bigint UNSIGNED NOT NULL,
   `group_nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '群昵称',
   `join_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_group_member`(`group_id`, `member_id`, `join_time`) USING BTREE,
   INDEX `member_id`(`member_id`) USING BTREE,
   CONSTRAINT `ch_group_members_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_group_members_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `ch_groups` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_group_members
 -- ----------------------------
+INSERT INTO `ch_group_members` VALUES (1, 1, 426809250224799813, 'ambisiss', '2023-05-28 16:40:58', NULL);
+INSERT INTO `ch_group_members` VALUES (2, 1, 426809436573532229, 'lucienxxx', '2023-05-28 16:40:58', NULL);
+INSERT INTO `ch_group_members` VALUES (3, 1, 432545192306802757, '阿斯顿', '2023-05-28 16:40:58', NULL);
+INSERT INTO `ch_group_members` VALUES (4, 1, 432545225664102469, '阿萨德', '2023-05-28 16:40:58', NULL);
 
 -- ----------------------------
 -- Table structure for ch_group_message
@@ -144,14 +148,15 @@ CREATE TABLE `ch_groups`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_ids`(`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_groups
 -- ----------------------------
+INSERT INTO `ch_groups` VALUES (1, '相亲相爱一家人', '2023-05-28 16:40:58', NULL);
 
 -- ----------------------------
 -- Table structure for ch_groups_admin_relation
@@ -168,11 +173,12 @@ CREATE TABLE `ch_groups_admin_relation`  (
   INDEX `ch_groups_admin_relation_ibfk_2`(`user_id`) USING BTREE,
   CONSTRAINT `ch_groups_admin_relation_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `ch_groups` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ch_groups_admin_relation_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `ch_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_groups_admin_relation
 -- ----------------------------
+INSERT INTO `ch_groups_admin_relation` VALUES (1, 1, 426809250224799813, '2023-05-28 16:40:58');
 
 -- ----------------------------
 -- Table structure for ch_message_status
@@ -221,7 +227,7 @@ CREATE TABLE `ch_relation_status`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ch_relation_status
@@ -257,6 +263,8 @@ CREATE TABLE `ch_user`  (
 -- ----------------------------
 INSERT INTO `ch_user` VALUES (426809250224799813, 'ambisiss', '$2a$10$OgzwXUyRX.3enbKVt9z0IuPuyB/hYqL1fiqjzde/rX7XffOmQtqRW', '1', NULL, '13556787083', 'q799774821@163.com', NULL, '2023-05-12 20:47:37', NULL);
 INSERT INTO `ch_user` VALUES (426809436573532229, 'lucienxxx', '$2a$10$bEZcfVhfal2OkMBV2beQWOksraz/G1yTN73kFWxTKLFMcY8Xe4Y2i', NULL, NULL, NULL, NULL, NULL, '2023-05-12 20:48:22', NULL);
+INSERT INTO `ch_user` VALUES (432545192306802757, '阿斯顿', '$2a$10$YwqIs1sCxeOB3aAGpoKHT.pT22B6goj2/PJiLTlLL3HaZg/SCiKdy', NULL, NULL, NULL, NULL, NULL, '2023-05-28 16:40:12', NULL);
+INSERT INTO `ch_user` VALUES (432545225664102469, '阿萨德', '$2a$10$8VeYru.OC0V4W.xeLoI.3uH4wWJJsjXFqZDRn5Vcc5X/uSNg77t/6', NULL, NULL, NULL, NULL, NULL, '2023-05-28 16:40:20', NULL);
 
 -- ----------------------------
 -- Table structure for ch_user_friend
@@ -296,7 +304,7 @@ CREATE TABLE `quartz_job`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '备注信息',
   PRIMARY KEY (`job_id`, `job_name`, `job_group`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '定时任务调度表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '定时任务调度表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of quartz_job
@@ -319,7 +327,7 @@ CREATE TABLE `quartz_job_log`  (
   `exception_info` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '异常信息',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`job_log_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '定时任务调度日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of quartz_job_log

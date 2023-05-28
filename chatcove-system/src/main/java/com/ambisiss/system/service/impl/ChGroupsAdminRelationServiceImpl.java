@@ -38,8 +38,7 @@ public class ChGroupsAdminRelationServiceImpl extends ServiceImpl<ChGroupsAdminR
     public int delRelation(ChGroupsAdminRelationDto dto) {
         QueryWrapper<ChGroupsAdminRelation> wrapper = new QueryWrapper<>();
         wrapper.eq("group_id", dto.getGroupId()).eq("user_id", dto.getUserId());
-        ChGroupsAdminRelation adminRelation = relationDao.selectById(wrapper);
-        return relationDao.deleteById(adminRelation);
+        return relationDao.delete(wrapper);
     }
 
     @Override
@@ -48,5 +47,12 @@ public class ChGroupsAdminRelationServiceImpl extends ServiceImpl<ChGroupsAdminR
         wrapper.eq("group_id", groupId);
         List<ChGroupsAdminRelation> adminRelations = relationDao.selectList(wrapper);
         return adminRelations.stream().map(ChGroupsAdminRelation::getUserId).collect(Collectors.toList());
+    }
+
+    @Override
+    public int delGroupRelation(Long groupId) {
+        QueryWrapper<ChGroupsAdminRelation> wrapper = new QueryWrapper<>();
+        wrapper.eq("group_id", groupId);
+        return relationDao.deleteById(wrapper);
     }
 }

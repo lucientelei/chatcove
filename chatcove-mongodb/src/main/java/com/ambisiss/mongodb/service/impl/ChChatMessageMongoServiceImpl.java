@@ -1,5 +1,6 @@
 package com.ambisiss.mongodb.service.impl;
 
+import com.ambisiss.common.constant.MessageReadConstant;
 import com.ambisiss.common.utils.MessageUUIDGenerator;
 import com.ambisiss.mongodb.dto.ChChatMsgInsertDto;
 import com.ambisiss.mongodb.entity.ChChatMessageMongo;
@@ -40,9 +41,11 @@ public class ChChatMessageMongoServiceImpl implements ChChatMessageMongoService 
 
 
     @Override
-    public int insertMessage(ChChatMsgInsertDto dto) {
+    public String insertMessage(ChChatMsgInsertDto dto) {
         Long userId = dto.getUserId();
         ChatMessage chatMessage = generateChatMessage(dto);
+        String messageUuid = MessageUUIDGenerator.generateUUID();
+        chatMessage.setMessageUuid(messageUuid);
         Criteria criteria = Criteria.where(USER_ID).is(userId);
         Query query = new Query().addCriteria(criteria);
         ChChatMessageMongo messageMongo = mongoTemplate.findOne(query, ChChatMessageMongo.class, COLLECTION_NAME);
@@ -60,7 +63,7 @@ public class ChChatMessageMongoServiceImpl implements ChChatMessageMongoService 
             Update update = new Update().addToSet(CHAT_MESSAGE_LIST, chatMessage);
             mongoTemplate.upsert(query1, update, ChChatMessageMongo.class, COLLECTION_NAME);
         }
-        return 1;
+        return messageUuid;
     }
 
     @Override
@@ -102,7 +105,7 @@ public class ChChatMessageMongoServiceImpl implements ChChatMessageMongoService 
         if (messageMongo != null && messageMongo.getChatMessageList() != null) {
             //TODO 获取未读消息并返回
             List<ChatMessage> unReadList = messageMongo.getChatMessageList().stream()
-                    .filter(item -> item.getRead() == 0).collect(Collectors.toList());
+                    .filter(item -> item.getRead() == MessageReadConstant.UNREAD).collect(Collectors.toList());
             messageMongo.setChatMessageList(unReadList);
         }
         return messageMongo;
@@ -116,12 +119,11 @@ public class ChChatMessageMongoServiceImpl implements ChChatMessageMongoService 
      */
     private ChatMessage generateChatMessage(ChChatMsgInsertDto dto) {
         ChatMessage message = new ChatMessage();
-        message.setMessageUuid(MessageUUIDGenerator.generateUUID());
         message.setSenderId(dto.getSenderId());
         message.setReceiverId(dto.getReceiverId());
         message.setMessage(dto.getMessage());
         message.setMessageTypeId(dto.getMessageTypeId());
-        message.setRead(0);
+        message.setRead(MessageReadConstant.UNREAD);
         message.setCreateTime(LocalDateTime.now());
         return message;
     }

@@ -1,7 +1,7 @@
 package com.ambisiss.system.service.impl;
 
 import com.ambisiss.common.bo.ChFriendRelationshipBo;
-import com.ambisiss.common.constant.RelationEnum;
+import com.ambisiss.common.enums.RelationEnum;
 import com.ambisiss.common.dto.ChFriendRelationshipDto;
 import com.ambisiss.system.entity.ChFriendRelationship;
 import com.ambisiss.system.mapper.ChFriendRelationshipDao;

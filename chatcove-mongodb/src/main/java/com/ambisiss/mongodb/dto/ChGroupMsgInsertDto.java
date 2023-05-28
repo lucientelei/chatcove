@@ -19,8 +19,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @NoArgsConstructor
 public class ChGroupMsgInsertDto {
 
-    @ApiModelProperty("用户ID")
-    private Long userId;
+//    @ApiModelProperty("用户ID")
+//    private Long userId;
 
     @ApiModelProperty("群聊ID")
     private Long groupId;
@@ -34,4 +34,6 @@ public class ChGroupMsgInsertDto {
     @ApiModelProperty("消息类型")
     private Long messageTypeId;
 
+    @ApiModelProperty(value = "消息uuid", hidden = true)
+    private String messageUuid;
 }

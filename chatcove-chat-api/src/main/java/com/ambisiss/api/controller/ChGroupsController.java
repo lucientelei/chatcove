@@ -31,10 +31,10 @@ public class ChGroupsController {
         return GlobalResult.success(result);
     }
 
-    @DeleteMapping("/delGroup/{id}")
+    @DeleteMapping("/delGroup/{groupId}")
     @ApiOperation(value = "解散群组")
-    public GlobalResult delGroup(@PathVariable("id") Long id) {
-        int result = groupsService.delGroup(id);
+    public GlobalResult delGroup(@PathVariable("groupId") Long groupId) {
+        int result = groupsService.delGroup(groupId);
         return GlobalResult.success(result);
     }
 
