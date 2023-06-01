@@ -31,6 +31,10 @@ spring:
             threadPriority: 5
             threadsInheritContextClassLoaderOfInitializingThread: true
     job-store-type: jdbc
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
 
 # mybaits-plus配置
 mybatis-plus:

@@ -68,7 +68,10 @@ public class SwaggerConfig implements WebMvcConfigurer {
             log.info("......Swagger2启动于 localhost:" + port + "/swagger-ui.html");
         }
 //        String basePackages = "com.ambisiss.api.controller" + splitor + "com.ambisiss.quartz.controller";
-        String basePackages = "com.ambisiss.quartz.controller" + splitor + "com.ambisiss.api.controller" + splitor + "com.ambisiss.mongodb.controller";
+        String basePackages = "com.ambisiss.quartz.controller" +
+                splitor + "com.ambisiss.api.controller" +
+                splitor + "com.ambisiss.mongodb.controller" +
+                splitor + "com.ambisiss.es.controller";
         return new Docket(DocumentationType.SWAGGER_2)
                 .pathMapping("/")
                 .enable(flag)
