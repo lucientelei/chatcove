@@ -157,6 +157,10 @@ spring:
       authenticationDatabase: admin
       # 连接的数据库
       database: chatcove
+  #es配置
+  elasticsearch:
+    rest:
+      uris: http://localhost:9200
 
 
 #日志拓展配置

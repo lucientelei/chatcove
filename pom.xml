@@ -25,11 +25,12 @@
         <module>chatcove-kafka</module>
         <module>chatcove-mongodb</module>
         <module>chatcove-quartz</module>
+        <module>chatcove-es</module>
     </modules>
 
     <!--  版本号管理  -->
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <springboot.version>2.3.7.RELEASE</springboot.version>
         <mysql.version>8.0.20</mysql.version>
         <mybatis-plus-starter.version>3.5.1</mybatis-plus-starter.version>
@@ -257,6 +258,11 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-devtools</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
                 <version>${springboot.version}</version>
             </dependency>
         </dependencies>
