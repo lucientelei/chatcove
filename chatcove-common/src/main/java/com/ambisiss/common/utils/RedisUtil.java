@@ -33,6 +33,10 @@ public class RedisUtil {
         redisTemplate.opsForValue().set(key, value);
     }
 
+    public <T> void incr(final String key){
+        redisTemplate.opsForValue().increment(key);
+    }
+
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
@@ -71,10 +75,11 @@ public class RedisUtil {
 
     /**
      * 通过TOKEN获取缓存的用户信息
+     *
      * @param key
      * @return
      */
-    public ChUserVo getLoginUserByToken(String key){
+    public ChUserVo getLoginUserByToken(String key) {
         ChUserVo loginUser = (ChUserVo) redisTemplate.boundValueOps(key).get();
         return loginUser;
     }

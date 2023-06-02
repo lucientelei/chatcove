@@ -1,5 +1,6 @@
 package com.ambisiss.api.controller;
 
+import com.ambisiss.common.aspect.AccessLimit;
 import com.ambisiss.common.dto.ChChatMessageDto;
 import com.ambisiss.common.dto.ChChatMessagePageDto;
 import com.ambisiss.common.global.GlobalPage;

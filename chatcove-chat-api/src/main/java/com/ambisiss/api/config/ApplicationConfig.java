@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+//import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -23,7 +23,7 @@ import java.util.TimeZone;
 @MapperScan(basePackages = {"com.ambisiss.**.mapper"})
 @ComponentScan(basePackages = {"com.ambisiss.*"})
 @EnableWebMvc
-@EnableElasticsearchRepositories(basePackages = "com.ambisiss.es.repo")
+//@EnableElasticsearchRepositories(basePackages = "com.ambisiss.es.repo")
 public class ApplicationConfig {
 
     @Bean

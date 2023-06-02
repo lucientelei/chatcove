@@ -1,5 +1,6 @@
 package com.ambisiss.api.controller;
 
+import com.ambisiss.common.aspect.AccessLimit;
 import com.ambisiss.common.bo.ChFriendRelationshipBo;
 import com.ambisiss.common.dto.ChFriendRelationshipDto;
 import com.ambisiss.common.global.GlobalResult;

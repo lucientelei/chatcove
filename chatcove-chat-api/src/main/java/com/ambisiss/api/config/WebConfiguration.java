@@ -1,5 +1,6 @@
 package com.ambisiss.api.config;
 
+import com.ambisiss.common.interceptor.LimitInterceptor;
 import com.ambisiss.common.interceptor.TokenInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -30,6 +31,11 @@ public class WebConfiguration implements WebMvcConfigurer {
         return new TokenInterceptor();
     }
 
+    @Bean
+    public LimitInterceptor limitInterceptor() {
+        return new LimitInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 //        log.info("注入interceptors");
@@ -52,8 +58,10 @@ public class WebConfiguration implements WebMvcConfigurer {
         excludePath.add("/v2/**");
         excludePath.add("/csrf/**");
 
-
         registry.addInterceptor(tokenInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns(excludePath);
+        registry.addInterceptor(limitInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePath);
 
@@ -71,6 +79,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     /**
      * 解决mongodb获取Long类型id失真
+     *
      * @param converters
      */
     @Override

@@ -260,9 +260,16 @@
                 <artifactId>spring-boot-devtools</artifactId>
                 <version>${springboot.version}</version>
             </dependency>
+            <!--  es  -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+            <!--  aop  -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
                 <version>${springboot.version}</version>
             </dependency>
         </dependencies>
