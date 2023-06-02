@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import java.util.TimeZone;
 @ComponentScan(basePackages = {"com.ambisiss.*"})
 @EnableWebMvc
 //@EnableElasticsearchRepositories(basePackages = "com.ambisiss.es.repo")
+@ServletComponentScan
 public class ApplicationConfig {
 
     @Bean
