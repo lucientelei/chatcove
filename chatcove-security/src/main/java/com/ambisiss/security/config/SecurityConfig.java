@@ -18,7 +18,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //开启CSRF防护
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .ignoringAntMatchers("/druid/*");
+//        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                .ignoringAntMatchers("/druid/*");
+        http.csrf().disable() // 解决POST请求403错误
+                .authorizeRequests()
+                .anyRequest().permitAll();
     }
 }

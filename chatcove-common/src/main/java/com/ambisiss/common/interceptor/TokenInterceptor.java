@@ -7,6 +7,7 @@ import com.ambisiss.common.constant.RedisConstant;
 import com.ambisiss.common.global.GlobalResult;
 import com.ambisiss.common.utils.JwtUtils;
 import com.ambisiss.common.utils.RedisUtil;
+import com.ambisiss.common.vo.ChUserVo;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * @Author: chenxiaoye
@@ -50,11 +52,9 @@ public class TokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
-
         //servlet请求响应转换
         String token = request.getHeader("Authorization");
-        String cacheObject = redisUtil.getCacheObject(RedisConstant.USER_TOKEN_PREFIX + token);
-        if (StringUtils.isEmpty(token) || StringUtils.isEmpty(cacheObject)) {
+        if (StringUtils.isEmpty(token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(JSON.toJSONString(GlobalResult.error(HttpStatus.UNAUTHORIZED, "未登录")));
@@ -65,12 +65,34 @@ public class TokenInterceptor implements HandlerInterceptor {
             response.setStatus(HttpStatus.SUCCESS);
             return false;
         }
-        //redis中不存在token
-//        if (StringUtils.isEmpty(redisUtil.getCacheObject(RedisConstant.USER_TOKEN_PREFIX + token))) {
-//            return false;
-//        }
+        /*
+        用户登录成功 生成token给到用户, 同时存储到redis中（key值为用户名（标识）） value为生成的token
+        用户再次访问系统请求参数中带有token信息 后台通过过滤器进行拦截进行比对
+        如果token匹配成功 就放行 匹配不成功 说明两个token不一致
+        开始比对对应的时间戳 后者时间戳 大于前者就把当前token覆盖
+        （如果旧的token请求再次进来 期时间戳就晚于当前redis中的token时间（token已经更新）判断其为被踢出的用户提示重新登录）
+         */
+        String userId = JwtUtils.getClaimFiled(token, "userId");
+        String userToken = "";
+        ChUserVo chUserVo = null;
+        if (!StringUtils.isEmpty(userId)) {
+            chUserVo = JSON.parseObject(redisUtil.getCacheObject(RedisConstant.USER_PREFIX + userId), ChUserVo.class);
+            userToken = chUserVo.getToken();
+        }
+        //当前token与redis存储的用户token不一致
+        if (!token.equals(userToken)) {
+            Date tokenIssueAt = JwtUtils.getIssueAt(token);
+            Date userTokenIssueAt = JwtUtils.getIssueAt(userToken);
+            if (tokenIssueAt.after(userTokenIssueAt)) {
+                redisUtil.setCacheObject(RedisConstant.USER_PREFIX + chUserVo.getId(), JSON.toJSONString(chUserVo));
+                return true;
+            } else {
+                return false;
+            }
+        }
         return true;
     }
+
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {

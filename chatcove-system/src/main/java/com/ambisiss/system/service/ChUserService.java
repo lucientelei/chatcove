@@ -56,7 +56,7 @@ public interface ChUserService extends IService<ChUser> {
      * @param dto
      * @return
      */
-    String userLogin(ChUserDto dto);
+    ChUserVo userLogin(ChUserDto dto);
 
     /**
      * 用户退出登录

@@ -148,7 +148,8 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        if ("ping".equals(message)) {
+        JSONObject jsonObject = JSON.parseObject(message);
+        if ("ping".equals(jsonObject.get("content"))) {
             //心跳
             session.getBasicRemote().sendText("pong");
         } else {

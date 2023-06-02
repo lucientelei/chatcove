@@ -93,12 +93,13 @@ public class JwtUtils {
      * @param username
      * @return
      */
-    public static String createToken(Long userId, String username) {
+    public static String createToken(String userId, String username) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withClaim("userId", userId)
                     .withClaim("username", username)
+                    .withIssuedAt(new Date())
                     .withIssuer(issuer)
                     .sign(algorithm);
         } catch (Exception e) {

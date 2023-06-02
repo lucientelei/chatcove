@@ -61,6 +61,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(tokenInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePath);
+
         registry.addInterceptor(limitInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePath);

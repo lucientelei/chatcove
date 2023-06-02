@@ -96,22 +96,25 @@ public class ChUserServiceImpl extends ServiceImpl<ChUserDao, ChUser> implements
     }
 
     @Override
-    public String userLogin(ChUserDto dto) {
+    public ChUserVo userLogin(ChUserDto dto) {
+        ChUserVo chUserVo = new ChUserVo();
         QueryWrapper<ChUser> wrapper = new QueryWrapper<>();
         wrapper.eq("username", dto.getUsername());
         ChUser user = userDao.selectOne(wrapper);
         if (StringUtils.isEmpty(user)) {
-            return "-1";
+            return null;
         }
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boolean matches = passwordEncoder.matches(dto.getPassword(), user.getPassword());
         if (matches) {
-            ChUserVo userVo = getUserByName(dto.getUsername());
-            String token = JwtUtils.createToken(user.getId(), user.getUsername());
-            redisUtil.setCacheObject(RedisConstant.USER_TOKEN_PREFIX + token, JSON.toJSONString(userVo));
-            return token;
+            BeanUtils.copyProperties(user, chUserVo);
+            String token = JwtUtils.createToken(String.valueOf(chUserVo.getId()), chUserVo.getUsername());
+            chUserVo.setToken(token);
+            //用户登录成功 生成token给到用户, 同时存储到redis中（key值为用户ID（标识）） value为生成的token
+            redisUtil.setCacheObject(RedisConstant.USER_PREFIX + chUserVo.getId(), JSON.toJSONString(chUserVo));
+            return chUserVo;
         }
-        return "-1";
+        return null;
     }
 
     @Override

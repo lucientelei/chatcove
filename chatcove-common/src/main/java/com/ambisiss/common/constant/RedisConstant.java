@@ -8,4 +8,5 @@ package com.ambisiss.common.constant;
 public class RedisConstant {
 
     public static final String USER_TOKEN_PREFIX = "CHATCOVE_USER_TOKEN:";
+    public static final String USER_PREFIX = "CHATCOVE_USER:";
 }

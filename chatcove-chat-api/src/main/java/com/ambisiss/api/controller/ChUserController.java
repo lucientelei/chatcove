@@ -63,10 +63,10 @@ public class ChUserController {
     }
 
     @PostMapping("/login")
-    @ApiOperation(value = "用户登录", notes = "-1用户名或密码错误")
+    @ApiOperation(value = "用户登录", notes = "null:用户名或密码错误")
     public GlobalResult userLogin(@RequestBody ChUserDto dto) {
-        String token = userService.userLogin(dto);
-        return GlobalResult.success(token);
+        ChUserVo result = userService.userLogin(dto);
+        return GlobalResult.success(result);
     }
 
     @PostMapping("/logout")

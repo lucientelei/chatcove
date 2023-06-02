@@ -33,6 +33,8 @@ public class ChUserVo {
 
     private String signature;
 
+    private String token;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private LocalDateTime createTime;
 
