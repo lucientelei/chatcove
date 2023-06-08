@@ -61,8 +61,8 @@ public class ChFriendRelationshipController {
 
     @GetMapping("/list")
     @ApiOperation(value = "获取用户好友列表")
-    public GlobalResult listFriendRelationship(@RequestParam Long userId) {
-        List<ChFriendRelationshipBo> result = relationshipService.listFriend(userId);
+    public GlobalResult listFriendRelationship() {
+        List<ChFriendRelationshipBo> result = relationshipService.listFriend();
         return GlobalResult.success(result);
     }
 }

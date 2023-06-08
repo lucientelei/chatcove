@@ -54,8 +54,8 @@ public class ChFriendshipApplyController {
 
     @GetMapping("/list")
     @ApiOperation(value = "查看申请列表")
-    public GlobalResult listFriendshipApply(@RequestParam Long userId) {
-        List<ChFriendshipApply> result = applyService.listApply(userId);
+    public GlobalResult listFriendshipApply() {
+        List<ChFriendshipApply> result = applyService.listApply();
         return GlobalResult.success(result);
     }
 }

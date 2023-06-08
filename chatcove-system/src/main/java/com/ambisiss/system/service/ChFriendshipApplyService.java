@@ -43,5 +43,5 @@ public interface ChFriendshipApplyService extends IService<ChFriendshipApply> {
      * @param userId
      * @return
      */
-    List<ChFriendshipApply> listApply(Long userId);
+    List<ChFriendshipApply> listApply();
 }

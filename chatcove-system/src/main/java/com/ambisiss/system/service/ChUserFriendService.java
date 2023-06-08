@@ -31,8 +31,7 @@ public interface ChUserFriendService extends IService<ChUserFriend> {
 
     /**
      * 查询用户好友关系
-     * @param userId
      * @return
      */
-    List<ChUserFriend> listFriend(Long userId);
+    List<ChUserFriend> listFriend();
 }

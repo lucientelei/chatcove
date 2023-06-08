@@ -18,11 +18,9 @@ import lombok.experimental.Accessors;
 public class ChFriendRelationshipBo {
 
     @ApiModelProperty("好友ID")
-    private Long friendId;
+    private Long userId;
 
-    @ApiModelProperty("添加状态")
-    private Long statusId;
+    @ApiModelProperty("备注昵称")
+    private String nickName;
 
-    @ApiModelProperty("是否置顶联系人 1：是 0：否")
-    private String isTop;
 }

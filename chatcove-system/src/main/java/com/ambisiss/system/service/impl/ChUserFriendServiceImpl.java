@@ -1,5 +1,6 @@
 package com.ambisiss.system.service.impl;
 
+import com.ambisiss.common.utils.JwtUtils;
 import com.ambisiss.system.entity.ChUserFriend;
 import com.ambisiss.system.mapper.ChUserFriendDao;
 import com.ambisiss.system.service.ChUserFriendService;
@@ -7,7 +8,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -41,7 +45,11 @@ public class ChUserFriendServiceImpl extends ServiceImpl<ChUserFriendDao, ChUser
     }
 
     @Override
-    public List<ChUserFriend> listFriend(Long userId) {
+    public List<ChUserFriend> listFriend() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getRequest();
+        String token = request.getHeader("Authorization");
+        String userId = JwtUtils.getClaimFiled(token, "userId");
         QueryWrapper<ChUserFriend> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         return friendDao.selectList(wrapper);

@@ -19,5 +19,7 @@ public class ChFriendRelationshipDto {
     private Long userId;
 
     private Long friendId;
+
+    private Long statusId;
     
 }

@@ -50,8 +50,7 @@ public interface ChFriendRelationshipService extends IService<ChFriendRelationsh
 
     /**
      * 获取用户好友列表
-     * @param userId
      * @return
      */
-    List<ChFriendRelationshipBo> listFriend(Long userId);
+    List<ChFriendRelationshipBo> listFriend();
 }

@@ -42,6 +42,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         List<String> excludePath = new ArrayList<>();
 
         // 白名单
+        excludePath.add("/test/**");
         excludePath.add("/book/**");
         excludePath.add("/api/chat/**/login");
         excludePath.add("/api/chat/**/register");
