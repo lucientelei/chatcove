@@ -144,6 +144,7 @@ public class ChGroupMessageMongoServiceImpl implements ChGroupMessageMongoServic
         groupMessage.setMessage(dto.getMessage());
         groupMessage.setCreateTime(LocalDateTime.now());
         groupMessage.setRead(MessageReadConstant.UNREAD);
+
         return groupMessage;
     }
 }

@@ -214,6 +214,7 @@ public class WebSocketServer {
         //获取成员用户ID列表
         List<Long> memberIds = membersVos.stream().map(ChGroupMembersVo::getMemberId).collect(Collectors.toList());
         memberIds.forEach(item -> {
+            //TODO 群成员不在线、
             if (websocketClients.get(item) != null) {
                 Session session = websocketClients.get(item);
                 session.getAsyncRemote().sendText(dto.toString());
